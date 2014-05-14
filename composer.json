@@ -39,7 +39,7 @@
         "zf-commons/zfc-base" : "0.*",
         "bjyoungblood/bjy-authorize" : "1.1.*",  
         "playground/core" : "dev-master",    
-        "playground/cms2" : "dev-master"    
+        "playground/cms2" : "dev-develop"
     },
     "require-dev" : {
         "phpunit/phpunit" : "3.7.*"
