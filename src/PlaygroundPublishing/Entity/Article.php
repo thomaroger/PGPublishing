@@ -781,7 +781,7 @@ class Article implements InputFilterAwareInterface
         foreach ($locales as $locale) {
             if(!empty($pageTranslations[$locale->getLocale()])) {
                 $ressource = new \PlaygroundCMS\Entity\Ressource();
-                $url  = strtolower("/".$locale->getLocale()."/".$pageTranslations[$locale->getLocale()]['slug'].'-'.$this->getId().'.html');
+                $url  = strtolower("/".$locale->getLocale()."/article/".$pageTranslations[$locale->getLocale()]['slug'].'-'.$this->getId().'.html');
                 $ressource->setUrl($url);
                 $ressource->setModel(__CLASS__);
                 $ressource->setRecordId($this->getId());
@@ -821,7 +821,7 @@ class Article implements InputFilterAwareInterface
         $pageTranslations = $repository->findTranslations($this);
         foreach ($locales as $locale) {
             $ressource = new \PlaygroundCMS\Entity\Ressource();
-            $url  = strtolower("/".$locale->getLocale()."/".$pageTranslations[$locale->getLocale()]['slug'].'-'.$this->getId().'.html');
+            $url  = strtolower("/".$locale->getLocale()."/article/".$pageTranslations[$locale->getLocale()]['slug'].'-'.$this->getId().'.html');
             $ressource->setUrl($url);
             $ressource->setModel(__CLASS__);
             $ressource->setRecordId($this->getId());

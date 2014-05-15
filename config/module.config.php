@@ -54,7 +54,7 @@ return array(
                         ),
                         'may_terminate' => true,
                         'child_routes' => array(
-                            'article' => array(
+                            'articles' => array(
                                 'type' => 'Segment',
                                 'options' => array(
                                     'route' => '/articles[/:filter][/:p]',

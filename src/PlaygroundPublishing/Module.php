@@ -53,10 +53,15 @@ class Module
                 'playgroundpublishing_tag_mapper' => function  ($sm) {
                     return new Mapper\Tag($sm->get('playgroundpublishing_doctrine_em'), $sm->get('playgroundpublishing_module_options'));
                 },
+
+                'playgroundpublishing_article_mapper' => function  ($sm) {
+                    return new Mapper\Article($sm->get('playgroundpublishing_doctrine_em'), $sm->get('playgroundpublishing_module_options'));
+                },
             ),
             'invokables' => array(
                 'playgroundpublishing_category_service' => 'PlaygroundPublishing\Service\Category',
                 'playgroundpublishing_tag_service'      => 'PlaygroundPublishing\Service\Tag',
+                'playgroundpublishing_article_service'  => 'PlaygroundPublishing\Service\Article',
 
             ),
         );
