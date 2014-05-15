@@ -79,7 +79,7 @@ class Comment implements InputFilterAwareInterface
     protected $updated_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity="PlaygroundPublishing\Entity\Article", inversedBy="Comment")
+     * @ORM\ManyToOne(targetEntity="PlaygroundPublishing\Entity\Article", inversedBy="comments")
      */
     protected $article;
 

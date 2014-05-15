@@ -85,7 +85,7 @@ class Tag implements InputFilterAwareInterface
     protected $slug;
 
     /**
-     * @ORM\ManyToMany(targetEntity="PlaygroundPublishing\Entity\Article", mappedBy="Tag")
+     * @ORM\ManyToMany(targetEntity="PlaygroundPublishing\Entity\Article", mappedBy="tags")
      */
     private $articles;
 

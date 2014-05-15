@@ -46,8 +46,16 @@ class Module
 
                     return new Options\ModuleOptions(isset($config['playgroundpublishing']) ? $config['playgroundpublishing'] : array());
                 },
+
+                 // MAPPER
+                
+                'playgroundpublishing_category_mapper' => function  ($sm) {
+                    return new Mapper\Category($sm->get('playgroundpublishing_doctrine_em'), $sm->get('playgroundpublishing_module_options'));
+                },
             ),
             'invokables' => array(
+                'playgroundpublishing_category_service'           => 'PlaygroundPublishing\Service\Category',
+
             ),
         );
     }}

@@ -162,7 +162,7 @@ class Article implements InputFilterAwareInterface
     protected $tags;
 
      /**
-     * @ORM\OneToMany(targetEntity="PlaygroundPublishing\Entity\Comment", mappedBy="Article")
+     * @ORM\OneToMany(targetEntity="PlaygroundPublishing\Entity\Comment", mappedBy="article")
      */
     protected $comments;
 

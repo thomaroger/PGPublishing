@@ -59,7 +59,7 @@ return array(
                                 'options' => array(
                                     'route' => '/articles[/:filter][/:p]',
                                     'defaults' => array(
-                                        'controller' => 'PlaygroundPublishing\Controller\Back\Page',
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Article',
                                         'action'     => 'list',
                                     ),
                                 ),    
@@ -69,7 +69,7 @@ return array(
                                 'options' => array(
                                     'route' => '/article/create',
                                     'defaults' => array(
-                                        'controller' => 'PlaygroundPublishing\Controller\Back\Page',
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Article',
                                         'action'     => 'create',
                                     ),
                                 ), 
@@ -79,7 +79,7 @@ return array(
                                 'options' => array(
                                     'route' => '/article/edit/:id',
                                     'defaults' => array(
-                                        'controller' => 'PlaygroundPublishing\Controller\Back\Page',
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Article',
                                         'action'     => 'edit',
                                     ),
                                     'constraints' => array(
@@ -92,7 +92,54 @@ return array(
                                 'options' => array(
                                     'route' => '/article/remove/:id',
                                     'defaults' => array(
-                                        'controller' => 'PlaygroundPublishing\Controller\Back\Page',
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Article',
+                                        'action'     => 'remove',
+                                    ),
+                                    'constraints' => array(
+                                        'id' => '[0-9]+',
+                                    ),
+                                ), 
+                            ),
+
+                            'categories' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/categories[/:filter][/:p]',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Category',
+                                        'action'     => 'list',
+                                    ),
+                                ),    
+                            ),
+                            'category_create' => array(
+                                'type' => 'Literal',
+                                'options' => array(
+                                    'route' => '/category/create',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Category',
+                                        'action'     => 'create',
+                                    ),
+                                ), 
+                            ),
+                            'category_edit' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/category/edit/:id',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Category',
+                                        'action'     => 'edit',
+                                    ),
+                                    'constraints' => array(
+                                        'id' => '[0-9]+',
+                                    ),
+                                ), 
+                            ),
+                            'category_remove' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/category/remove/:id',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Category',
                                         'action'     => 'remove',
                                     ),
                                     'constraints' => array(
@@ -115,7 +162,9 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'PlaygroundPublishing\Controller\Front\Article'        => 'PlaygroundPublishing\Controller\Front\ArticleController',
+
             'PlaygroundPublishing\Controller\Back\Article' => 'PlaygroundPublishing\Controller\Back\ArticleController',
+            'PlaygroundPublishing\Controller\Back\Category' => 'PlaygroundPublishing\Controller\Back\CategoryController',
         ),
     ),
 

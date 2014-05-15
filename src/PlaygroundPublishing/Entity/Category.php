@@ -47,7 +47,7 @@ class Category implements InputFilterAwareInterface
      * Used locale to override Translation listener`s locale
      * this is not a mapped field of entity metadata, just a simple property
      */
-    protected $locale;
+    protected $locale = 'en_US';
 
     /**
      * @ORM\Id
@@ -91,9 +91,9 @@ class Category implements InputFilterAwareInterface
     protected $description;
 
      /**
-     * @ORM\ManyToMany(targetEntity="PlaygroundPublishing\Entity\Article", mappedBy="Category")
+     * @ORM\ManyToMany(targetEntity="PlaygroundPublishing\Entity\Article", mappedBy="categories")
      */
-    private $articles;
+    protected $articles;
 
 
     protected $translations;
