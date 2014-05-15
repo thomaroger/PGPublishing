@@ -147,6 +147,52 @@ return array(
                                     ),
                                 ), 
                             ),
+                            'tags' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/tags[/:filter][/:p]',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Tag',
+                                        'action'     => 'list',
+                                    ),
+                                ),    
+                            ),
+                            'tag_create' => array(
+                                'type' => 'Literal',
+                                'options' => array(
+                                    'route' => '/tag/create',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Tag',
+                                        'action'     => 'create',
+                                    ),
+                                ), 
+                            ),
+                            'tag_edit' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/tag/edit/:id',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Tag',
+                                        'action'     => 'edit',
+                                    ),
+                                    'constraints' => array(
+                                        'id' => '[0-9]+',
+                                    ),
+                                ), 
+                            ),
+                            'tag_remove' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/tag/remove/:id',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Tag',
+                                        'action'     => 'remove',
+                                    ),
+                                    'constraints' => array(
+                                        'id' => '[0-9]+',
+                                    ),
+                                ), 
+                            ),
                         ),
                     ),
                 ),
@@ -165,6 +211,7 @@ return array(
 
             'PlaygroundPublishing\Controller\Back\Article' => 'PlaygroundPublishing\Controller\Back\ArticleController',
             'PlaygroundPublishing\Controller\Back\Category' => 'PlaygroundPublishing\Controller\Back\CategoryController',
+            'PlaygroundPublishing\Controller\Back\Tag' => 'PlaygroundPublishing\Controller\Back\TagController',
         ),
     ),
 

@@ -10,10 +10,7 @@ class Module
 {
     public function onBootstrap(MvcEvent $e)
     {
-        $application     = $e->getTarget();
-        $serviceManager  = $application->getServiceManager();
-        $eventManager    = $application->getEventManager();
-        $translator = $serviceManager->get('translator');
+        $translator = $e->getTarget()->getServiceManager()->get('translator');
         AbstractValidator::setDefaultTranslator($translator,'playgroundpublishing');
     }
 
@@ -52,9 +49,14 @@ class Module
                 'playgroundpublishing_category_mapper' => function  ($sm) {
                     return new Mapper\Category($sm->get('playgroundpublishing_doctrine_em'), $sm->get('playgroundpublishing_module_options'));
                 },
+
+                'playgroundpublishing_tag_mapper' => function  ($sm) {
+                    return new Mapper\Tag($sm->get('playgroundpublishing_doctrine_em'), $sm->get('playgroundpublishing_module_options'));
+                },
             ),
             'invokables' => array(
-                'playgroundpublishing_category_service'           => 'PlaygroundPublishing\Service\Category',
+                'playgroundpublishing_category_service' => 'PlaygroundPublishing\Service\Category',
+                'playgroundpublishing_tag_service'      => 'PlaygroundPublishing\Service\Tag',
 
             ),
         );

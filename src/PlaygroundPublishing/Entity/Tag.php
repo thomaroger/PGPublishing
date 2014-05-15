@@ -47,7 +47,7 @@ class Tag implements InputFilterAwareInterface
      * Used locale to override Translation listener`s locale
      * this is not a mapped field of entity metadata, just a simple property
      */
-    protected $locale;
+    protected $locale = 'en_US';
 
     /**
      * @ORM\Id
