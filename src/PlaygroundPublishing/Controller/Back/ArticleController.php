@@ -13,6 +13,8 @@ use Zend\View\Model\ViewModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use PlaygroundCMS\Security\Credential;
 use PlaygroundPublishing\Entity\Article;
+use PlaygroundPublishing\Entity\Category;
+use PlaygroundPublishing\Entity\Tag;
 
 class ArticleController extends AbstractActionController
 {
@@ -25,6 +27,16 @@ class ArticleController extends AbstractActionController
     * @var Service $pageService Service de page
     */
     protected $articleService;
+
+    /**
+    * @var Service $pageService Service de page
+    */
+    protected $categoryService;
+
+    /**
+    * @var Service $pageService Service de page
+    */
+    protected $tagService;
 
     /**
     * @var Ressource $ressourceService  Service de ressource
@@ -55,7 +67,7 @@ class ArticleController extends AbstractActionController
     {
         $articlesId = array();
         $ressourcesCollection = array();
-        $this->layout()->setVariable('nav', "cms");
+        $this->layout()->setVariable('nav', "content");
         $this->layout()->setVariable('subNav', "article");
         $p = $this->getRequest()->getQuery('page', 1);
 
@@ -99,6 +111,10 @@ class ArticleController extends AbstractActionController
     {
         $return  = array();
         $data = array();
+        
+        $this->layout()->setVariable('nav', "content");
+        $this->layout()->setVariable('subNav', "article");
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = array_merge(
@@ -121,11 +137,16 @@ class ArticleController extends AbstractActionController
         $layouts = $this->getLayoutService()->getLayoutMapper()->findAll();
         $locales = $this->getLocaleService()->getLocaleMapper()->findBy(array('active_front' => 1));
 
+        $tags = $this->getTagService()->getTagMapper()->findBy(array('status' => Category::CATEGORY_PUBLISHED));
+        $categories = $this->getCategoryService()->getCategoryMapper()->findBy(array('status' => Tag::TAG_PUBLISHED));
+
         return new ViewModel(array('credentials'      => $credentials,
                                    'articlesStatuses' => $articlesStatuses,
                                    'layouts'          => $layouts,
                                    'locales'          => $locales,
                                    'data'             => $data,
+                                   'tags'             => $tags,
+                                   'categories'       => $categories,
                                    'return'           => $return));
     }
 
@@ -139,6 +160,9 @@ class ArticleController extends AbstractActionController
     {
         $return  = array();
         $data = array();
+
+        $this->layout()->setVariable('nav', "content");
+        $this->layout()->setVariable('subNav', "article");
         
         $request = $this->getRequest();
 
@@ -175,12 +199,16 @@ class ArticleController extends AbstractActionController
         $articlesStatuses = Article::$statuses;
         $layouts = $this->getLayoutService()->getLayoutMapper()->findAll();
         $locales = $this->getLocaleService()->getLocaleMapper()->findBy(array('active_front' => 1));
+        $tags = $this->getTagService()->getTagMapper()->findBy(array('status' => Category::CATEGORY_PUBLISHED));
+        $categories = $this->getCategoryService()->getCategoryMapper()->findBy(array('status' => Tag::TAG_PUBLISHED));
 
         return new ViewModel(array('credentials'      => $credentials,
                                    'articlesStatuses' => $articlesStatuses,
                                    'layouts'          => $layouts,
                                    'locales'          => $locales,
                                    'article'          => $article,
+                                   'tags'             => $tags,
+                                   'categories'       => $categories,
                                    'ressources'       => $ressources,
                                    'return'           => $return));
     }
@@ -211,6 +239,35 @@ class ArticleController extends AbstractActionController
         $this->getArticleService()->getArticleMapper()->remove($article);
 
         return $this->redirect()->toRoute('admin/playgroundpublishingadmin/articles');
+    }
+
+
+    /**
+    * getTagService : Recuperation du service de tag
+    *
+    * @return Tag $tagService 
+    */
+    private function getTagService()
+    {
+        if (!$this->tagService) {
+            $this->tagService = $this->getServiceLocator()->get('playgroundpublishing_tag_service');
+        }
+
+        return $this->tagService;
+    }
+
+     /**
+    * getCategoryService : Recuperation du service de category
+    *
+    * @return Category $categoryService 
+    */
+    private function getCategoryService()
+    {
+        if (!$this->categoryService) {
+            $this->categoryService = $this->getServiceLocator()->get('playgroundpublishing_category_service');
+        }
+
+        return $this->categoryService;
     }
 
     /**

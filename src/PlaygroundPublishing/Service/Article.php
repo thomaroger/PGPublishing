@@ -21,9 +21,19 @@ class Article extends EventProvider implements ServiceManagerAwareInterface
 {
 
     /**
-     * @var PlaygroundCMS\Mapper\Page pageMapper
+     * @var PlaygroundPublishing\Mapper\Page pageMapper
      */
-    protected $pageMapper;
+    protected $articleMapper;
+
+    /**
+     * @var PlaygroundPublishing\Mapper\Tag tagMapper
+     */
+    protected $tagMapper;
+
+    /**
+     * @var PlaygroundPublishing\Mapper\Category categoryMapper
+     */
+    protected $categoryMapper;
 
     /**
      * @var Zend\ServiceManager\ServiceManager ServiceManager
@@ -91,9 +101,25 @@ class Article extends EventProvider implements ServiceManagerAwareInterface
                         ->translate($article, 'keywordMeta', $locale->getLocale(), $data['article'][$locale->getLocale()]['keyword_seo'])
                         ->translate($article, 'descriptionMeta', $locale->getLocale(), $data['article'][$locale->getLocale()]['description_seo']); 
                
-            }
-            
+            }   
         }
+
+        if (!empty($data['article']['tags'])) { 
+            $tags = $data['article']['tags'];
+            foreach ($tags as $tagId) {
+                $tag = $this->getTagMapper()->findById($tagId);
+                $article->addTag($tag);
+            }
+        }
+
+         if (!empty($data['article']['categories'])) { 
+            $categories = $data['article']['categories'];
+            foreach ($categories as $categoryId) {
+                $category = $this->getCategoryMapper()->findById($categoryId);
+                $article->addCategory($category);
+            }
+        }
+
 
         $article = $this->getArticleMapper()->persist($article);
         $article = $this->getArticleMapper()->findById($article->getId());
@@ -257,17 +283,45 @@ class Article extends EventProvider implements ServiceManagerAwareInterface
     }
 
     /**
-     * getPageMapper : Getter pour pageMapper
+     * getArticleMapper : Getter pour articleMapper
      *
-     * @return PlaygroundCMS\Mapper\Page $pageMapper
+     * @return PlaygroundPublishing\Mapper\Article $articleMapper
      */
     public function getArticleMapper()
     {
-        if (null === $this->pageMapper) {
-            $this->pageMapper = $this->getServiceManager()->get('playgroundpublishing_article_mapper');
+        if (null === $this->articleMapper) {
+            $this->articleMapper = $this->getServiceManager()->get('playgroundpublishing_article_mapper');
         }
 
-        return $this->pageMapper;
+        return $this->articleMapper;
+    }
+
+    /**
+     * getTagMapper : Getter pour tagMapper
+     *
+     * @return PlaygroundPublishing\Mapper\Tag $tagMapper
+     */
+    public function getTagMapper()
+    {
+        if (null === $this->tagMapper) {
+            $this->tagMapper = $this->getServiceManager()->get('playgroundpublishing_tag_mapper');
+        }
+
+        return $this->tagMapper;
+    }
+
+    /**
+     * getTagMapper : Getter pour tagMapper
+     *
+     * @return PlaygroundPublishing\Mapper\Tag $tagMapper
+     */
+    public function getCategoryMapper()
+    {
+        if (null === $this->categoryMapper) {
+            $this->categoryMapper = $this->getServiceManager()->get('playgroundpublishing_category_mapper');
+        }
+
+        return $this->categoryMapper;
     }
 
     /**

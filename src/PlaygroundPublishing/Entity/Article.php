@@ -74,6 +74,16 @@ class Article implements InputFilterAwareInterface
      */
     protected $status = 0;
 
+    /**
+     * @ORM\Column(name="is_web", type="boolean", nullable=false)
+     */
+    protected $isWeb = 0;
+
+    /**
+     * @ORM\Column(name="is_mobile", type="boolean", nullable=false)
+     */
+    protected $isMobile = 0;
+
      /**
      * @ORM\Column(type="string", length=255, nullable=false)
      */
