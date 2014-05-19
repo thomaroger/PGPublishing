@@ -178,13 +178,12 @@ class ArticleController extends AbstractActionController
         $article->setTranslations($translations);
 
         $ressources = $this->getRessourceService()->getRessourceMapper()->findBy(array('model' => 'PlaygroundPublishing\Entity\Article', 'recordId' => $articleId));
-        
         if ($request->isPost()) {
             $data = array_merge(
                     $request->getPost()->toArray(),
                     $request->getFiles()->toArray()
             );
-            $return = $this->getArticleService()->checkPage($data);
+            $return = $this->getArticleService()->checkArticle($data);
             $data = $return["data"];
             unset($return["data"]);
 

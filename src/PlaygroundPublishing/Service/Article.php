@@ -145,10 +145,10 @@ class Article extends EventProvider implements ServiceManagerAwareInterface
 
         $article->setIsMobile(0);
         if ($data['article']['mobile']['active'] == 1) {
-            $page->setIsMobile(1);
+            $article->setIsMobile(1);
             $layoutContext['mobile'] = $data['article']['mobile']['layout'];
         }
-        $article->setStatus(PageEntity::ARTICLE_DRAFT);
+        $article->setStatus(ArticleEntity::ARTICLE_DRAFT);
 
         if (!empty($data['article']['status'])) {
             $article->setStatus($data['article']['status']);
@@ -166,7 +166,7 @@ class Article extends EventProvider implements ServiceManagerAwareInterface
         $slugify = new Slugify;
         $locales = $this->getLocaleMapper()->findBy(array('active_front' => 1));
 
-        $repository = $this->getArticleMapper()->getEntityManager()->getRepository($page->getTranslationRepository());
+        $repository = $this->getArticleMapper()->getEntityManager()->getRepository($article->getTranslationRepository());
 
         foreach ($locales as $locale) {
             if(!empty($data['article'][$locale->getLocale()])) {
@@ -177,13 +177,32 @@ class Article extends EventProvider implements ServiceManagerAwareInterface
                         ->translate($article, 'keywordMeta', $locale->getLocale(), $data['article'][$locale->getLocale()]['keyword_seo'])
                         ->translate($article, 'descriptionMeta', $locale->getLocale(), $data['article'][$locale->getLocale()]['description_seo']); 
                
+            }   
+        }
+
+
+        $article->setCategories(array());
+        $article->setTags(array());
+
+        $article = $this->getArticleMapper()->update($article);
+        
+        if (!empty($data['article']['tags'])) { 
+            $tags = $data['article']['tags'];
+            foreach ($tags as $tagId) {
+                $tag = $this->getTagMapper()->findById($tagId);
+                $article->addTag($tag);
             }
-            
+        }
+
+         if (!empty($data['article']['categories'])) { 
+            $categories = $data['article']['categories'];
+            foreach ($categories as $categoryId) {
+                $category = $this->getCategoryMapper()->findById($categoryId);
+                $article->addCategory($category);
+            }
         }
 
         $article = $this->getArticleMapper()->update($article);
-        $article = $this->getArticleMapper()->findById($article->getId());
-
         $article->editRessource($this->getArticleMapper(), $locales);
     }
 

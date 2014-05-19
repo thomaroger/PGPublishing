@@ -40,6 +40,20 @@ return array(
    
     'router' => array(
         'routes' => array(   
+            // http://dev.pgcms.fr/fr/article/mon-article-1.html Page entity article
+            'article' => array(
+                'type' => 'PlaygroundCMS\Router\Http\RegexSlash',
+                'options' => array(
+                  'regex'    => '\/(?<locale>([a-z_]{5}+))\/article\/(?<slugiverse>([\/a-z0-9-]+))-(?<id>([0-9]+)).(?<format>([xml|html|json]+))\/?',
+                  'defaults' => array(
+                    'controller' => 'PlaygroundPublishing\Controller\Front\Article',
+                    'action'     => 'index',
+                  ),
+                  'spec' => '',
+                ),
+            'may_terminate' => true,
+            ),
+            
             'admin' => array(
                 'child_routes' => array(
                     'playgroundpublishingadmin' => array(
@@ -227,6 +241,6 @@ return array(
         ),
     ),
     'blocksType' => array(
-        'cms' => __DIR__.'../src/PlaygroundPublishing/Blocks', 
+        'publishing' => __DIR__.'/../src/PlaygroundPublishing/Blocks', 
     ),
 );

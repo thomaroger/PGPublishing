@@ -57,6 +57,12 @@ class Module
                 'playgroundpublishing_article_mapper' => function  ($sm) {
                     return new Mapper\Article($sm->get('playgroundpublishing_doctrine_em'), $sm->get('playgroundpublishing_module_options'));
                 },
+
+                'playgroundpublishing-blocks-articleblock-form' => function  ($sm) {
+                    $form = new Form\ArticleForm(null, $sm);
+
+                    return $form;
+                },
             ),
             'invokables' => array(
                 'playgroundpublishing_category_service' => 'PlaygroundPublishing\Service\Category',
