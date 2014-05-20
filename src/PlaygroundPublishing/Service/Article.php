@@ -173,6 +173,8 @@ class Article extends EventProvider implements ServiceManagerAwareInterface
                 $slug = $slugify->filter($data['article'][$locale->getLocale()]['title']);
                 $repository->translate($article, 'title', $locale->getLocale(), $data['article'][$locale->getLocale()]['title'])
                         ->translate($article, 'slug', $locale->getLocale(), $slug)
+                        ->translate($article, 'abstract', $locale->getLocale(), $data['article'][$locale->getLocale()]['abstract'])
+                        ->translate($article, 'content', $locale->getLocale(), $data['article'][$locale->getLocale()]['content'])
                         ->translate($article, 'titleMeta', $locale->getLocale(), $data['article'][$locale->getLocale()]['title_seo'])
                         ->translate($article, 'keywordMeta', $locale->getLocale(), $data['article'][$locale->getLocale()]['keyword_seo'])
                         ->translate($article, 'descriptionMeta', $locale->getLocale(), $data['article'][$locale->getLocale()]['description_seo']); 
