@@ -38,7 +38,8 @@ class ArticleBlockController extends AbstractBlockController
 
 
         $params = array('block' => $block,
-                        'article' => $this->getEntity());
+                        'article' => $this->getEntity(),
+                        'ressource' => $ressource);
 
         $model = new ViewModel($params);
         
