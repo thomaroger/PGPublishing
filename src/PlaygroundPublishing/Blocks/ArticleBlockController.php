@@ -26,10 +26,22 @@ class ArticleBlockController extends AbstractBlockController
         $article = $this->getEntity();
         $ressource = $this->getRessource();
 
-        $params = array('block'     => $block,
-                        'ressource' => $ressource,
-                        'em'       => $this->getArticleMapper()->getEntityManager(),
-                        'article'  => $this->getEntity());
+
+        foreach ($article->getTags() as $tag) {
+            $translations = $this->getArticleMapper()->getEntityRepositoryForEntity($tag->getTranslationRepository())->findTranslations($tag);
+            $tag->setTranslations($translations[$ressource->getLocale()]);
+        }
+
+         foreach ($article->getCategories() as $category) {
+            $translations = $this->getArticleMapper()->getEntityRepositoryForEntity($category->getTranslationRepository())->findTranslations($category);
+            $category->setTranslations($translations[$ressource->getLocale()]);
+        }
+
+
+        $params = array('block' => $block,
+                        'em' => $this->getArticleMapper()->getEntityManager(),
+                        'article' => $this->getEntity(),
+                        'ressource' => $ressource);
 
         $model = new ViewModel($params);
         
