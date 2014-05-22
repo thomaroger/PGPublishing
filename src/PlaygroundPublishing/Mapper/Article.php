@@ -64,7 +64,7 @@ class Article extends EntityMapper
     {
         
         return array(
-            'name' => 'filterOnName',
+            'title' => 'filterOnTitle',
         );
     }
 
@@ -75,10 +75,10 @@ class Article extends EntityMapper
     *
     * @return QueryBuilder $query
     */
-    public function filterOnName(QueryBuilder $query, $name)
+    public function filterOnTitle(QueryBuilder $query, $title)
     {
-        $query->where("a.name LIKE :name");
-        $query->setParameter('name', (string) $name);
+        $query->where("a.title LIKE :title");
+        $query->setParameter('title', (string) $title);
 
         return $query;
     }

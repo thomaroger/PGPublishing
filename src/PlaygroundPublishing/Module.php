@@ -81,6 +81,18 @@ class Module
 
                     return $form;
                 },
+
+                'playgroundpublishing-blocks-taglist-form'  => function  ($sm) {
+                    $form = new Form\TagListForm(null, $sm);
+
+                    return $form;
+                },
+
+                'playgroundpublishing-blocks-categorylist-form'  => function  ($sm) {
+                    $form = new Form\CategoryListForm(null, $sm);
+
+                    return $form;
+                },
             ),
             'invokables' => array(
                 'playgroundpublishing_category_service' => 'PlaygroundPublishing\Service\Category',

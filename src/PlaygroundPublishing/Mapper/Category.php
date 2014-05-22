@@ -40,4 +40,46 @@ class Category extends EntityMapper
 
         return $this->er;
     }
+
+    /**
+    * getSupportedSorts : déclaration des tris supportés par l'entity Block
+    *
+    * @return array $sort
+    */
+    public function getSupportedSorts()
+    {
+        
+        return array(
+            'title' => 'c.title',
+            'updatedAt' => 'c.updated_at',
+        );
+    }
+
+    /**
+    * getSupportedFilters : déclaration des filtres supportés par l'entity Block
+    *
+    * @return array $filters
+    */
+    public function getSupportedFilters()
+    {
+        
+        return array(
+            'title' => 'filterOnTitle',
+        );
+    }
+
+    /**
+    * filterOnName : Permet de filtrer sur 
+    * @param QueryBuilder $query
+    * @param string $name
+    *
+    * @return QueryBuilder $query
+    */
+    public function filterOnTitle(QueryBuilder $query, $title)
+    {
+        $query->where("c.title LIKE :title");
+        $query->setParameter('title', (string) $title);
+
+        return $query;
+    }
 }
