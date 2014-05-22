@@ -13,7 +13,7 @@ use ZfcBase\Form\ProvidesEventsForm;
 use Zend\ServiceManager\ServiceManager;
 use PlaygroundCMS\Form\BlockForm;
 
-class ArticleSameCategoryListForm extends BlockForm
+class ArticleCategoryListForm extends BlockForm
 {
     /**
     * {@inheritdoc}
@@ -192,7 +192,7 @@ class ArticleSameCategoryListForm extends BlockForm
             }
         } else {
             if (!empty($data['configuration']['category'])) {
-                $this->get('configuration[category][column]')->setValue($data['configuration']['category']);
+                $this->get('configuration[category]')->setValue($data['configuration']['category']);
             }
             if (!empty($data['configuration']['current_entity'])) {
                 $this->get('configuration[current_entity]')->setValue($data['configuration']['current_entity']);

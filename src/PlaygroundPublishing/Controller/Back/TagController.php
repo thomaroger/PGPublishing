@@ -12,6 +12,7 @@ namespace PlaygroundPublishing\Controller\Back;
 use Zend\View\Model\ViewModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use PlaygroundPublishing\Entity\Tag;
+use PlaygroundCMS\Security\Credential;
 
 class TagController extends AbstractActionController
 {
@@ -30,6 +31,10 @@ class TagController extends AbstractActionController
     */
     protected $localeService;
 
+    protected $layoutService;
+
+    protected $ressourceService;
+
  
     /**
     * listAction : Liste des layouts
@@ -40,6 +45,10 @@ class TagController extends AbstractActionController
     {
         $this->layout()->setVariable('nav', "content");
         $this->layout()->setVariable('subNav', "tag");
+
+        $tagId = array();
+        $ressourcesCollection = array();
+
     
         $p = $this->getRequest()->getQuery('page', 1);
 
@@ -51,10 +60,20 @@ class TagController extends AbstractActionController
         $tagsPaginator->setItemCountPerPage(self::MAX_PER_PAGE);
         $tagsPaginator->setCurrentPageNumber($p);
 
+        foreach ($tags as $tag) {
+            $tagId[] = $tag->getId();
+        }
+
+        $ressources = $this->getRessourceService()->getRessourceMapper()->findBy(array('model' => 'PlaygroundPublishing\Entity\Tag', 'recordId' => $tagId));
+        foreach ($ressources as $ressource) {
+            $ressourcesCollection[$ressource->getRecordId()][$ressource->getLocale()] = $ressource;
+        }
+
         
-        return new ViewModel(array('tags'              => $tags,
-                                   'tagsPaginator'     => $tagsPaginator,
-                                   'nbTag'             => $nbTag));
+        return new ViewModel(array('tags'                 => $tags,
+                                   'tagsPaginator'        => $tagsPaginator,
+                                   'ressourcesCollection' => $ressourcesCollection,
+                                   'nbTag'                => $nbTag));
     }
 
     /**
@@ -87,11 +106,16 @@ class TagController extends AbstractActionController
             }
         }
 
+
+        $credentials = Credential::$statusesForm;
         $tagStatuses = Tag::$statuses;
+        $layouts = $this->getLayoutService()->getLayoutMapper()->findAll();
         $locales = $this->getLocaleService()->getLocaleMapper()->findBy(array('active_front' => 1));
 
         return new ViewModel(array('data'   => $data,
                                    'locales' => $locales,
+                                   'credentials' => $credentials,
+                                   'layouts' => $layouts,
                                    'tagStatuses' => $tagStatuses,
                                    'return' => $return));
     }
@@ -122,6 +146,8 @@ class TagController extends AbstractActionController
         $translations = $this->getTagService()->getTagMapper()->getEntityRepositoryForEntity($tag->getTranslationRepository())->findTranslations($tag);
         $tag->setTranslations($translations);
 
+        $ressources = $this->getRessourceService()->getRessourceMapper()->findBy(array('model' => 'PlaygroundPublishing\Entity\Tag', 'recordId' => $tag->getId()));
+
         if ($request->isPost()) {
             $data = array_merge(
                     $request->getPost()->toArray(),
@@ -139,11 +165,16 @@ class TagController extends AbstractActionController
             }
         }
 
+        $credentials = Credential::$statusesForm;
         $tagStatuses = Tag::$statuses;
+        $layouts = $this->getLayoutService()->getLayoutMapper()->findAll();
         $locales = $this->getLocaleService()->getLocaleMapper()->findBy(array('active_front' => 1));
 
         return new ViewModel(array('tag' => $tag,
                                    'locales' => $locales,
+                                   'layouts' => $layouts,
+                                   'ressources' => $ressources,
+                                   'credentials' => $credentials,
                                    'tagStatuses' => $tagStatuses,
                                    'return' => $return));
     }
@@ -162,6 +193,12 @@ class TagController extends AbstractActionController
         if(empty($tag)){
 
             return $this->redirect()->toRoute('admin/playgroundpublishingadmin/tags');
+        }
+
+         // Suppression des ressources associées 
+        $ressources = $this->getRessourceService()->getRessourceMapper()->findBy(array('model' => 'PlaygroundPublishing\Entity\Tag', 'recordId' => $articleId));
+        foreach ($ressources as $ressource) {
+            $this->getRessourceService()->getRessourceMapper()->remove($ressource);
         }
         
         $this->getTagService()->getTagMapper()->remove($tag);
@@ -195,5 +232,34 @@ class TagController extends AbstractActionController
         }
 
         return $this->localeService;
+    }
+
+
+    /**
+    * getLayoutService : Recuperation du service de Layout
+    *
+    * @return Layout $layoutService 
+    */
+    private function getLayoutService()
+    {
+        if (!$this->layoutService) {
+            $this->layoutService = $this->getServiceLocator()->get('playgroundcms_layout_service');
+        }
+
+        return $this->layoutService;
+    }
+
+    /**
+    * getRessourceService : Recuperation du service de Ressource
+    *
+    * @return Ressource $ressourceService 
+    */
+    private function getRessourceService()
+    {
+        if (!$this->ressourceService) {
+            $this->ressourceService = $this->getServiceLocator()->get('playgroundcms_ressource_service');
+        }
+
+        return $this->ressourceService;
     }
 }

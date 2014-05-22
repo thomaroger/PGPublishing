@@ -41,6 +41,15 @@ class Tag implements InputFilterAwareInterface
     */
     protected $inputFilter;
 
+    /** 
+    * @var string $securityContext
+    */
+    protected $securityContext;
+
+    /** 
+    * @var string $layoutContext
+    */
+    protected $layoutContext;
 
     /**
      * @Gedmo\Locale
@@ -60,6 +69,17 @@ class Tag implements InputFilterAwareInterface
      * @ORM\Column(type="smallint", nullable=false)
      */
     protected $status = 0;
+
+
+    /**
+     * @ORM\Column(name="is_web", type="boolean", nullable=false)
+     */
+    protected $isWeb = 0;
+
+    /**
+     * @ORM\Column(name="is_mobile", type="boolean", nullable=false)
+     */
+    protected $isMobile = 0;
 
 
     /**
@@ -83,6 +103,24 @@ class Tag implements InputFilterAwareInterface
      * @ORM\Column(type="string", length=255, nullable=false)
      */
     protected $slug;
+
+     /**
+     * @Gedmo\Translatable
+     * @ORM\Column(name="title_meta", type="string", length=255, nullable=false)
+     */
+    protected $titleMeta;
+
+    /**
+     * @Gedmo\Translatable
+     * @ORM\Column(name="description_meta", type="string", length=255, nullable=false)
+     */
+    protected $descriptionMeta;
+
+    /**
+     * @Gedmo\Translatable
+     * @ORM\Column(name="keyword_meta", type="string", length=255, nullable=false)
+     */
+    protected $keywordMeta;
 
     /**
      * @ORM\ManyToMany(targetEntity="PlaygroundPublishing\Entity\Article", mappedBy="tags")
@@ -110,6 +148,52 @@ class Tag implements InputFilterAwareInterface
     public function setId($id)
     {
         $this->id = (int) $id;
+
+        return $this;
+    }
+
+      /**
+     * getIsWeb : Getter pour isWeb
+     *
+     * @return boolean $isWeb
+     */
+    public function getIsWeb()
+    {
+        return $this->isWeb;
+    }
+    
+    /**
+     * setIsWeb : Setter pour isWeb
+     * @param boolean $isWeb 
+     *
+     * @return Page $page
+     */
+    public function setIsWeb($isWeb)
+    {
+        $this->isWeb = (boolean) $isWeb;
+
+        return $this;
+    }
+
+     /**
+     * getIsMobile : Getter pour isMobile
+     *
+     * @return boolean $isMobile
+     */
+    public function getIsMobile()
+    {
+        return $this->isMobile;
+    }
+    
+    /**
+     * setIsMobile : Setter pour isMobile
+     * @param boolean $isMobile 
+     *
+     * @return Page $page
+     */
+    public function setIsMobile($isMobile)
+    {
+        $this->isMobile = (boolean) $isMobile;
 
         return $this;
     }
@@ -244,6 +328,121 @@ class Tag implements InputFilterAwareInterface
     }
 
      /**
+     * setTitleMeta : Setter pour titleMeta
+     * @param string $titleMeta 
+     *
+     * @return Page $page
+     */
+    public function setTitleMeta($titleMeta)
+    {
+        $this->titleMeta = (string) $titleMeta;
+
+        return $this;
+    }
+
+    /**
+     * getTitleMeta : Getter pour titleMeta
+     *
+     * @return strign $titleMeta
+     */
+    public function getTitleMeta()
+    {
+        return $this->titleMeta;
+    }
+
+    /**
+     * setKeywordMeta : Setter pour keywordMeta
+     * @param string $keywordMeta 
+     *
+     * @return Page $page
+     */
+    public function setKeywordMeta($keywordMeta)
+    {
+        $this->keywordMeta = (string) $keywordMeta;
+
+        return $this;
+    }
+
+    /**
+     * getKeywordMeta : Getter pour keywordMeta
+     *
+     * @return strign $keywordMeta
+     */
+    public function getKeywordMeta()
+    {
+        return $this->keywordMeta;
+    }
+
+    /**
+     * setDescriptionMeta : Setter pour descriptionMeta
+     * @param string $descriptionMeta 
+     *
+     * @return Page $page
+     */
+    public function setDescriptionMeta($descriptionMeta)
+    {
+        $this->descriptionMeta = (string) $descriptionMeta;
+
+        return $this;
+    }
+
+    /**
+     * getDescriptionMeta : Getter pour descriptionMeta
+     *
+     * @return string $descriptionMeta
+     */
+    public function getDescriptionMeta()
+    {
+        return $this->descriptionMeta;
+    }
+
+    /**
+     * setSecurityContext : Setter pour securityContext
+     * @param string $securityContext 
+     *
+     * @return Page $page
+     */
+    public function setSecurityContext($securityContext)
+    {
+        $this->securityContext = (string) $securityContext;
+
+        return $this;
+    }
+
+    /**
+     * getSecurityContext : Getter pour securityContext
+     *
+     * @return strign $slug
+     */
+    public function getSecurityContext()
+    {
+        return $this->securityContext;
+    }
+
+    /**
+     * setLayoutContext : Setter pour layoutContext
+     * @param string $layoutContext 
+     *
+     * @return Page $page
+     */
+    public function setLayoutContext($layoutContext)
+    {
+        $this->layoutContext = (string) $layoutContext;
+
+        return $this;
+    }
+
+    /**
+     * getLayoutContext : Getter pour layoutContext
+     *
+     * @return strign $layoutContext
+     */
+    public function getLayoutContext()
+    {
+        return $this->layoutContext;
+    }
+
+     /**
     * @return PlaygroundCore\Entity\Locale $Categories
     */
     public function getArticles()
@@ -330,6 +529,61 @@ class Tag implements InputFilterAwareInterface
     public function updateChrono()
     {
         $this->updated_at = new \DateTime("now");
+    }
+
+     /**
+    * checkVisibility : Permet de savoir si une page est disponible en front
+    *
+    * @return boolean $result
+    */
+    public function checkVisibility()
+    {
+        if ($this->getStatus() != 1) {
+            return false;
+        }
+
+        return true;
+    }
+
+     /**
+    * createRessource : Creation d'une ressource à partir d'une entité Page
+    * @param Page $pageMapper : Mapper de page
+    * @param Collection $locales : Collection de locales
+    */
+    public function createRessource($tagMaper, $locales)
+    {
+        $repository = $tagMaper->getEntityManager()->getRepository($this->getTranslationRepository());
+        $pageTranslations = $repository->findTranslations($this);
+        foreach ($locales as $locale) {
+            if(!empty($pageTranslations[$locale->getLocale()])) {
+                $ressource = new \PlaygroundCMS\Entity\Ressource();
+                $url  = strtolower("/".$locale->getLocale()."/tag/".$pageTranslations[$locale->getLocale()]['slug'].'-'.$this->getId().'.html');
+                $ressource->setUrl($url);
+                $ressource->setModel(__CLASS__);
+                $ressource->setRecordId($this->getId());
+                $ressource->setLocale($locale->getLocale());
+                $ressource->setSecurityContext($this->getSecurityContext());
+                $ressource->setLayoutContext($this->getLayoutContext());
+                $tagMaper->persist($ressource);
+            }
+        }
+    }
+
+    /**
+    * editRessource : Edition d'une ressource à partir d'une entité Page lors de l'edition d'une page
+    * @param Page $pageMapper : Mapper de page
+    * @param Collection $locales : Collection de locales
+    */
+    public function editRessource($tagMaper, $locales)
+    {
+        $repository = $tagMaper->getEntityManager()->getRepository('PlaygroundCMS\Entity\Ressource');
+        $ressources = $repository->findBy(array('model' => __CLASS__, 'recordId' => $this->getId()));
+
+        foreach ($ressources as $ressource) {
+            $ressource->setSecurityContext($this->getSecurityContext());
+            $ressource->setLayoutContext($this->getLayoutContext());
+            $tagMaper->persist($ressource);
+        }
     }
 
     /**

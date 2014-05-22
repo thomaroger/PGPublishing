@@ -54,4 +54,32 @@ class Article extends EntityMapper
             'updatedAt' => 'a.updated_at',
         );
     }
+
+    /**
+    * getSupportedFilters : déclaration des filtres supportés par l'entity Block
+    *
+    * @return array $filters
+    */
+    public function getSupportedFilters()
+    {
+        
+        return array(
+            'name' => 'filterOnName',
+        );
+    }
+
+    /**
+    * filterOnName : Permet de filtrer sur 
+    * @param QueryBuilder $query
+    * @param string $name
+    *
+    * @return QueryBuilder $query
+    */
+    public function filterOnName(QueryBuilder $query, $name)
+    {
+        $query->where("a.name LIKE :name");
+        $query->setParameter('name', (string) $name);
+
+        return $query;
+    }
 }

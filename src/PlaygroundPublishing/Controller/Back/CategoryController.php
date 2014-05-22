@@ -189,6 +189,12 @@ class CategoryController extends AbstractActionController
 
             return $this->redirect()->toRoute('admin/playgroundpublishingadmin/categories');
         }
+
+         // Suppression des ressources associées 
+        $ressources = $this->getRessourceService()->getRessourceMapper()->findBy(array('model' => 'PlaygroundPublishing\Entity\Category', 'recordId' => $articleId));
+        foreach ($ressources as $ressource) {
+            $this->getRessourceService()->getRessourceMapper()->remove($ressource);
+        }
         
         $this->getCategoryService()->getCategoryMapper()->remove($category);
 

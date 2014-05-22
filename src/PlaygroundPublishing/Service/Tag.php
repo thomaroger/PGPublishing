@@ -28,8 +28,6 @@ class Tag extends EventProvider implements ServiceManagerAwareInterface
      */
     protected $localeMapper;
     
-
-
     /**
      * @var Zend\ServiceManager\ServiceManager ServiceManager
      */
@@ -49,6 +47,22 @@ class Tag extends EventProvider implements ServiceManagerAwareInterface
             $tag->setStatus($data['tag']['status']);
         }
 
+        $tag->setIsWeb(0);
+        if ($data['tag']['web']['active'] == 1) {
+            $tag->setIsWeb(1);
+            $layoutContext['web'] = $data['tag']['web']['layout'];
+        }
+
+        $tag->setIsMobile(0);
+        if ($data['tag']['mobile']['active'] == 1) {
+            $tag->setIsMobile(1);
+            $layoutContext['mobile'] = $data['tag']['mobile']['layout'];
+        }
+
+        $tag->setLayoutContext(json_encode($layoutContext));
+        $tag->setSecurityContext($data['tag']['visibility']);
+
+
         $slugify = new Slugify;
         $locales = $this->getLocaleMapper()->findBy(array('active_front' => 1));
 
@@ -58,11 +72,17 @@ class Tag extends EventProvider implements ServiceManagerAwareInterface
             if(!empty($data['tag'][$locale->getLocale()])) {
                 $slug = $slugify->filter($data['tag'][$locale->getLocale()]['title']);
                 $repository->translate($tag, 'title', $locale->getLocale(), $data['tag'][$locale->getLocale()]['title'])
-                           ->translate($tag, 'slug', $locale->getLocale(), $slug); 
+                           ->translate($tag, 'slug', $locale->getLocale(), $slug)
+                           ->translate($tag, 'titleMeta', $locale->getLocale(), $data['tag'][$locale->getLocale()]['title_seo'])
+                           ->translate($tag, 'keywordMeta', $locale->getLocale(), $data['tag'][$locale->getLocale()]['keyword_seo'])
+                           ->translate($tag, 'descriptionMeta', $locale->getLocale(), $data['tag'][$locale->getLocale()]['description_seo']);
             }   
         }
 
         $tag = $this->getTagMapper()->persist($tag);
+        $tag = $this->getTagMapper()->findById($tag->getId());
+
+        $tag->createRessource($this->getTagMapper(), $locales);
     }
 
     /**
@@ -75,9 +95,24 @@ class Tag extends EventProvider implements ServiceManagerAwareInterface
         
         $tag->setStatus(TagEntity::TAG_REFUSED);
 
+        $tag->setIsWeb(0);
+        if ($data['tag']['web']['active'] == 1) {
+            $tag->setIsWeb(1);
+            $layoutContext['web'] = $data['tag']['web']['layout'];
+        }
+
+        $tag->setIsMobile(0);
+        if ($data['tag']['mobile']['active'] == 1) {
+            $tag->setIsMobile(1);
+            $layoutContext['mobile'] = $data['tag']['mobile']['layout'];
+        }
+
         if ($data['tag']['status'] != -1) {
             $tag->setStatus($data['tag']['status']);
         }
+
+        $tag->setLayoutContext(json_encode($layoutContext));
+        $tag->setSecurityContext($data['tag']['visibility']);
 
         $slugify = new Slugify;
         $locales = $this->getLocaleMapper()->findBy(array('active_front' => 1));
@@ -88,11 +123,16 @@ class Tag extends EventProvider implements ServiceManagerAwareInterface
             if(!empty($data['tag'][$locale->getLocale()])) {
                 $slug = $slugify->filter($data['tag'][$locale->getLocale()]['title']);
                 $repository->translate($tag, 'title', $locale->getLocale(), $data['tag'][$locale->getLocale()]['title'])
-                           ->translate($tag, 'slug', $locale->getLocale(), $slug); 
+                           ->translate($tag, 'slug', $locale->getLocale(), $slug)                           
+                           ->translate($tag, 'titleMeta', $locale->getLocale(), $data['tag'][$locale->getLocale()]['title_seo'])
+                           ->translate($tag, 'keywordMeta', $locale->getLocale(), $data['tag'][$locale->getLocale()]['keyword_seo'])
+                           ->translate($tag, 'descriptionMeta', $locale->getLocale(), $data['tag'][$locale->getLocale()]['description_seo']); 
             }   
         }
 
-        $tag = $this->getTagMapper()->persist($tag);
+        $tag = $this->getTagMapper()->update($tag);
+        $tag->editRessource($this->getTagMapper(), $locales);
+
     }
 
     /**
@@ -103,6 +143,31 @@ class Tag extends EventProvider implements ServiceManagerAwareInterface
     */
     public function checkTag($data)
     {
+          // Il faut au moins une plateforme d'activer
+        if ($data['tag']['web']['active'] == 0 && $data['tag']['mobile']['active'] == 0) {
+            
+            return array('status' => 1, 'message' => 'One of platform must be activated', 'data' => $data);
+        }
+
+        // Si une plateforme est active, alors il faut un layout
+        if ($data['tag']['web']['active'] == 1 && $data['tag']['web']['layout'] == '') {
+            
+            return array('status' => 1, 'message' => 'For a activate platform, you must have a layout', 'data' => $data);
+        }
+
+        // Si une plateforme est active, alors il faut un layout
+        if ($data['tag']['mobile']['active'] == 1 && $data['tag']['mobile']['layout'] == '') {
+            
+            return array('status' => 1, 'message' => 'For a activate platform, you must have a layout', 'data' => $data);
+        }
+
+        // Il faut une visibility
+        if(empty($data['tag']['visibility'])) {
+            
+            return array('status' => 1, 'message' => 'Visibility is required', 'data' => $data);  
+        }
+
+
         $locales = $this->getLocaleMapper()->findBy(array('active_front' => 1));
         $title = true;
         foreach ($locales as $locale) {

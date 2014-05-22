@@ -65,7 +65,19 @@ class Module
                 },
 
                 'playgroundpublishing-blocks-articlecategorylist-form'  => function  ($sm) {
-                    $form = new Form\ArticleSameCategoryListForm(null, $sm);
+                    $form = new Form\ArticleCategoryListForm(null, $sm);
+
+                    return $form;
+                },
+
+                'playgroundpublishing-blocks-articletaglist-form'  => function  ($sm) {
+                    $form = new Form\ArticleTagListForm(null, $sm);
+
+                    return $form;
+                },
+
+                'playgroundpublishing-blocks-articlelist-form'  => function  ($sm) {
+                    $form = new Form\ArticleListForm(null, $sm);
 
                     return $form;
                 },
