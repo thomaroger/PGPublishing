@@ -15,7 +15,7 @@ use PlaygroundCMS\Blocks\AbstractBlockController;
 
 class ArticleBlockController extends AbstractBlockController
 {
-    protected $tagMapper;
+    protected $articleMapper;
     /**
     * {@inheritdoc}
     * renderBlock : Rendu du bloc d'un bloc HTML
@@ -26,19 +26,10 @@ class ArticleBlockController extends AbstractBlockController
         $article = $this->getEntity();
         $ressource = $this->getRessource();
 
-        foreach ($article->getTags() as $tag) {
-            $translations = $this->getTagMapper()->getEntityRepositoryForEntity($tag->getTranslationRepository())->findTranslations($tag);
-            $tag->setTranslations($translations[$ressource->getLocale()]);
-        }
-
-         foreach ($article->getCategories() as $category) {
-            $translations = $this->getCategoryMapper()->getEntityRepositoryForEntity($category->getTranslationRepository())->findTranslations($category);
-            $category->setTranslations($translations[$ressource->getLocale()]);
-        }
-
-
-        $params = array('block' => $block,
-                        'article' => $this->getEntity());
+        $params = array('block'     => $block,
+                        'ressource' => $ressource,
+                        'em'       => $this->getArticleMapper()->getEntityManager(),
+                        'article'  => $this->getEntity());
 
         $model = new ViewModel($params);
         
@@ -61,26 +52,14 @@ class ArticleBlockController extends AbstractBlockController
     *
     * @return PlaygroundCMS\Mapper\Block $blockMapper : Classe de Mapper relié à l'entité Block
     */
-    protected function getTagMapper()
+    protected function getArticleMapper()
     {
-        if (empty($this->tagMapper)) {
-            $this->tagMapper = $this->getServiceManager()->get('playgroundpublishing_tag_mapper');
+        if (empty($this->articleMapper)) {
+            $this->articleMapper = $this->getServiceManager()->get('playgroundpublishing_article_mapper');
         }
 
-        return $this->tagMapper;
+        return $this->articleMapper;
     }
 
-    /**
-    * getBlockMapper : Getter pour le blockMapper
-    *
-    * @return PlaygroundCMS\Mapper\Block $blockMapper : Classe de Mapper relié à l'entité Block
-    */
-    protected function getCategoryMapper()
-    {
-        if (empty($this->categoryMapper)) {
-            $this->categoryMapper = $this->getServiceManager()->get('playgroundpublishing_category_mapper');
-        }
-
-        return $this->categoryMapper;
-    }
+   
 }

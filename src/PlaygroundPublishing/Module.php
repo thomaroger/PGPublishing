@@ -63,6 +63,12 @@ class Module
 
                     return $form;
                 },
+
+                'playgroundpublishing-blocks-articlecategorylist-form'  => function  ($sm) {
+                    $form = new Form\ArticleSameCategoryListForm(null, $sm);
+
+                    return $form;
+                },
             ),
             'invokables' => array(
                 'playgroundpublishing_category_service' => 'PlaygroundPublishing\Service\Category',

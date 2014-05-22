@@ -40,4 +40,18 @@ class Article extends EntityMapper
 
         return $this->er;
     }
+
+    /**
+    * getSupportedSorts : déclaration des tris supportés par l'entity Block
+    *
+    * @return array $sort
+    */
+    public function getSupportedSorts()
+    {
+        
+        return array(
+            'title' => 'a.title',
+            'updatedAt' => 'a.updated_at',
+        );
+    }
 }
