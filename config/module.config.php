@@ -53,6 +53,32 @@ return array(
                 ),
             'may_terminate' => true,
             ),
+
+            'tag' => array(
+                'type' => 'PlaygroundCMS\Router\Http\RegexSlash',
+                'options' => array(
+                  'regex'    => '\/(?<locale>([a-z_]{5}+))\/tag\/(?<slugiverse>([\/a-z0-9-]+))-(?<id>([0-9]+)).(?<format>([xml|html|json]+))\/?',
+                  'defaults' => array(
+                    'controller' => 'PlaygroundPublishing\Controller\Front\Tag',
+                    'action'     => 'index',
+                  ),
+                  'spec' => '',
+                ),
+            'may_terminate' => true,
+            ),
+
+            'tag' => array(
+                'type' => 'PlaygroundCMS\Router\Http\RegexSlash',
+                'options' => array(
+                  'regex'    => '\/(?<locale>([a-z_]{5}+))\/(categorie|category)\/(?<slugiverse>([\/a-z0-9-]+))-(?<id>([0-9]+)).(?<format>([xml|html|json]+))\/?',
+                  'defaults' => array(
+                    'controller' => 'PlaygroundPublishing\Controller\Front\Category',
+                    'action'     => 'index',
+                  ),
+                  'spec' => '',
+                ),
+            'may_terminate' => true,
+            ),
             
             'admin' => array(
                 'child_routes' => array(
@@ -221,11 +247,13 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'PlaygroundPublishing\Controller\Front\Article'        => 'PlaygroundPublishing\Controller\Front\ArticleController',
+            'PlaygroundPublishing\Controller\Front\Article'  => 'PlaygroundPublishing\Controller\Front\ArticleController',
+            'PlaygroundPublishing\Controller\Front\Category' => 'PlaygroundPublishing\Controller\Front\CategoryController',
+            'PlaygroundPublishing\Controller\Front\Tag'      => 'PlaygroundPublishing\Controller\Front\TagController',
 
-            'PlaygroundPublishing\Controller\Back\Article' => 'PlaygroundPublishing\Controller\Back\ArticleController',
+            'PlaygroundPublishing\Controller\Back\Article'  => 'PlaygroundPublishing\Controller\Back\ArticleController',
             'PlaygroundPublishing\Controller\Back\Category' => 'PlaygroundPublishing\Controller\Back\CategoryController',
-            'PlaygroundPublishing\Controller\Back\Tag' => 'PlaygroundPublishing\Controller\Back\TagController',
+            'PlaygroundPublishing\Controller\Back\Tag'      => 'PlaygroundPublishing\Controller\Back\TagController',
         ),
     ),
 

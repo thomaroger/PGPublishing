@@ -35,8 +35,12 @@ class ArticleCategoryListController extends AbstractListController
             $categories = array($this->getCategoryMapper()->findById($categoriesId[0]));
         } else {
             // Utiliastion de l'entité courante
-            $article = $this->getEntity();
-            $categories = $article->getCategories();
+            $entity = $this->getEntity();
+            if (get_class($entity) == 'PlaygroundPublishing\Entity\Category') {
+                $categories = array($entity);
+            }else {
+                $categories = $entity->getCategories();
+            }
             foreach ($categories as $category) {
                 $categoriesId[] = $category->getId();
             }
@@ -61,7 +65,7 @@ class ArticleCategoryListController extends AbstractListController
         // Filtre sur l'article si entite courante
         if($block->getParam('current_entity', 0) == true) {
             $query->andWhere("a.id != :id");
-            $query->setParameter('id', (int) $article->getId());
+            $query->setParameter('id', (int) $entity->getId());
         }
         
         $query = $this->addSort($query);   

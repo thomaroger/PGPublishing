@@ -11,6 +11,7 @@ namespace PlaygroundPublishing\Controller\Back;
 
 use Zend\View\Model\ViewModel;
 use Zend\Mvc\Controller\AbstractActionController;
+use PlaygroundCMS\Security\Credential;
 use PlaygroundPublishing\Entity\Category;
 
 class CategoryController extends AbstractActionController
@@ -30,6 +31,10 @@ class CategoryController extends AbstractActionController
     */
     protected $localeService;
 
+    protected $layoutService;
+
+    protected $ressourceService;
+
  
     /**
     * listAction : Liste des layouts
@@ -40,6 +45,7 @@ class CategoryController extends AbstractActionController
     {
         $this->layout()->setVariable('nav', "content");
         $this->layout()->setVariable('subNav', "category");
+        $categoriesId = array();
     
         $p = $this->getRequest()->getQuery('page', 1);
 
@@ -51,10 +57,19 @@ class CategoryController extends AbstractActionController
         $categoriesPaginator->setItemCountPerPage(self::MAX_PER_PAGE);
         $categoriesPaginator->setCurrentPageNumber($p);
 
+        foreach ($categories as $category) {
+            $categoriesId[] = $category->getId();
+        }
+
+        $ressources = $this->getRessourceService()->getRessourceMapper()->findBy(array('model' => 'PlaygroundPublishing\Entity\Category', 'recordId' => $categoriesId));
+        foreach ($ressources as $ressource) {
+            $ressourcesCollection[$ressource->getRecordId()][$ressource->getLocale()] = $ressource;
+        }
         
-        return new ViewModel(array('categories'              => $categories,
-                                   'categoriesPaginator'     => $categoriesPaginator,
-                                   'nbCategory'             => $nbCategory));
+        return new ViewModel(array('categories'           => $categories,
+                                   'categoriesPaginator'  => $categoriesPaginator,
+                                   'ressourcesCollection' => $ressourcesCollection,
+                                   'nbCategory'           => $nbCategory));
     }
 
     /**
@@ -87,11 +102,15 @@ class CategoryController extends AbstractActionController
             }
         }
 
+        $credentials = Credential::$statusesForm;
         $categoryStatuses = Category::$statuses;
+        $layouts = $this->getLayoutService()->getLayoutMapper()->findAll();
         $locales = $this->getLocaleService()->getLocaleMapper()->findBy(array('active_front' => 1));
 
         return new ViewModel(array('data'   => $data,
                                    'locales' => $locales,
+                                   'layouts' => $layouts,
+                                   'credentials' => $credentials,
                                    'categoryStatuses' => $categoryStatuses,
                                    'return' => $return));
     }
@@ -122,6 +141,8 @@ class CategoryController extends AbstractActionController
         $translations = $this->getCategoryService()->getCategoryMapper()->getEntityRepositoryForEntity($category->getTranslationRepository())->findTranslations($category);
         $category->setTranslations($translations);
 
+        $ressources = $this->getRessourceService()->getRessourceMapper()->findBy(array('model' => 'PlaygroundPublishing\Entity\Category', 'recordId' => $category->getId()));
+
         if ($request->isPost()) {
             $data = array_merge(
                     $request->getPost()->toArray(),
@@ -139,12 +160,17 @@ class CategoryController extends AbstractActionController
             }
         }
 
+        $credentials = Credential::$statusesForm;
         $categoryStatuses = Category::$statuses;
+        $layouts = $this->getLayoutService()->getLayoutMapper()->findAll();
         $locales = $this->getLocaleService()->getLocaleMapper()->findBy(array('active_front' => 1));
 
         return new ViewModel(array('category' => $category,
                                    'locales' => $locales,
+                                   'layouts' => $layouts,
+                                   'ressources' => $ressources,
                                    'categoryStatuses' => $categoryStatuses,
+                                   'credentials' => $credentials,
                                    'return' => $return));
     }
 
@@ -195,5 +221,33 @@ class CategoryController extends AbstractActionController
         }
 
         return $this->localeService;
+    }
+
+     /**
+    * getLayoutService : Recuperation du service de Layout
+    *
+    * @return Layout $layoutService 
+    */
+    private function getLayoutService()
+    {
+        if (!$this->layoutService) {
+            $this->layoutService = $this->getServiceLocator()->get('playgroundcms_layout_service');
+        }
+
+        return $this->layoutService;
+    }
+
+    /**
+    * getRessourceService : Recuperation du service de Ressource
+    *
+    * @return Ressource $ressourceService 
+    */
+    private function getRessourceService()
+    {
+        if (!$this->ressourceService) {
+            $this->ressourceService = $this->getServiceLocator()->get('playgroundcms_ressource_service');
+        }
+
+        return $this->ressourceService;
     }
 }
