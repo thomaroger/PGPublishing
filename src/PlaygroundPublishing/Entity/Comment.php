@@ -24,13 +24,13 @@ use Zend\InputFilter\InputFilterInterface;
 class Comment implements InputFilterAwareInterface
 {   
 
-    const ARTICLE_PENDING = 0;
-    const ARTICLE_PUBLISHED = 1;
-    const ARTICLE_REFUSED = 2;
+    const COMMENT_PENDING = 0;
+    const COMMENT_PUBLISHED = 1;
+    const COMMENT_REFUSED = 2;
 
-    public static $statuses = array(self::ARTICLE_PENDING => "Pending Review",
-                                    self::ARTICLE_PUBLISHED => "Published",
-                                    self::ARTICLE_REFUSED => "Refused");
+    public static $statuses = array(self::COMMENT_PENDING => "Pending Review",
+                                    self::COMMENT_PUBLISHED => "Published",
+                                    self::COMMENT_REFUSED => "Refused");
     /**
     * @var InputFilter $inputFilter
     */

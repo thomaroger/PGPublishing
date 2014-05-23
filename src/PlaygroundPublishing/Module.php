@@ -58,6 +58,10 @@ class Module
                     return new Mapper\Article($sm->get('playgroundpublishing_doctrine_em'), $sm->get('playgroundpublishing_module_options'));
                 },
 
+                'playgroundpublishing_comment_mapper' => function  ($sm) {
+                    return new Mapper\Comment($sm->get('playgroundpublishing_doctrine_em'), $sm->get('playgroundpublishing_module_options'));
+                },
+
                 'playgroundpublishing-blocks-article-form' => function  ($sm) {
                     $form = new Form\ArticleForm(null, $sm);
 
@@ -93,11 +97,20 @@ class Module
 
                     return $form;
                 },
+
+                'playgroundpublishing-blocks-commentlist-form'  => function  ($sm) {
+                    $form = new Form\CommentListForm(null, $sm);
+
+                    return $form;
+                },
+
+                
             ),
             'invokables' => array(
                 'playgroundpublishing_category_service' => 'PlaygroundPublishing\Service\Category',
                 'playgroundpublishing_tag_service'      => 'PlaygroundPublishing\Service\Tag',
                 'playgroundpublishing_article_service'  => 'PlaygroundPublishing\Service\Article',
+                'playgroundpublishing_comment_service'  => 'PlaygroundPublishing\Service\Comment',
 
             ),
         );
