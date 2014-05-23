@@ -11,6 +11,7 @@
 namespace PlaygroundPublishing\Mapper;
 
 use Doctrine\ORM\QueryBuilder;
+use PlaygroundPublishing\Entity\Article as ArticleEntity;
 
 class Article extends EntityMapper
 {
@@ -55,6 +56,21 @@ class Article extends EntityMapper
         );
     }
 
+    public function defaultFilters($query)
+    {
+        // Status publié
+        $query->andWhere("a.status = :status");
+        $query->setParameter('status',  ArticleEntity::ARTICLE_PUBLISHED);
+
+        // Période entre la date de debut et la date de fin
+        $currentTime = date('Y-m-d h:i:s');
+        $query->andWhere("a.startDate < :currentDate");
+        $query->andWhere("a.endDate > :currentDate");
+        $query->setParameter('currentDate',  $currentTime);
+
+        return $query;
+    }
+
     /**
     * getSupportedFilters : déclaration des filtres supportés par l'entity Block
     *
@@ -77,7 +93,7 @@ class Article extends EntityMapper
     */
     public function filterOnTitle(QueryBuilder $query, $title)
     {
-        $query->where("a.title LIKE :title");
+        $query->andWhere("a.title LIKE :title");
         $query->setParameter('title', (string) $title);
 
         return $query;

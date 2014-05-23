@@ -134,6 +134,22 @@ class ArticleTagListForm extends BlockForm
         ));
     }
 
+    /**
+    * getTemplates : Recuperation des templates
+    *
+    * @return array $templates
+    */
+    protected function getTemplates()
+    {
+        $templatesFiles = array();
+        $templates = $this->getServiceManager()->get('playgroundcms_template_service')->getTemplateMapper()->findBy(array('isSystem' => 0, 'blockType' => 'PlaygroundPublishing\Blocks\ArticleTagListController'));
+        foreach ($templates as $template) {
+            $templatesFiles[$template->getFile()] = $template->getFile();
+        }
+
+        return $templatesFiles;
+    } 
+
     private function getTags()
     {
         $tagsArray = array();

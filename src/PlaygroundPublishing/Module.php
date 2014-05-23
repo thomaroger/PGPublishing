@@ -58,7 +58,7 @@ class Module
                     return new Mapper\Article($sm->get('playgroundpublishing_doctrine_em'), $sm->get('playgroundpublishing_module_options'));
                 },
 
-                'playgroundpublishing-blocks-articleblock-form' => function  ($sm) {
+                'playgroundpublishing-blocks-article-form' => function  ($sm) {
                     $form = new Form\ArticleForm(null, $sm);
 
                     return $form;

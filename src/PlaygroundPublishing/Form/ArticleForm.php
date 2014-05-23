@@ -22,4 +22,20 @@ class ArticleForm extends BlockForm
     {
         parent::__construct($name, $sm);
     }
+
+    /**
+    * getTemplates : Recuperation des templates
+    *
+    * @return array $templates
+    */
+    protected function getTemplates()
+    {
+        $templatesFiles = array();
+        $templates = $this->getServiceManager()->get('playgroundcms_template_service')->getTemplateMapper()->findBy(array('isSystem' => 0, 'blockType' => 'PlaygroundPublishing\Blocks\ArticleController'));
+        foreach ($templates as $template) {
+            $templatesFiles[$template->getFile()] = $template->getFile();
+        }
+
+        return $templatesFiles;
+    } 
 }

@@ -13,7 +13,7 @@ namespace PlaygroundPublishing\Blocks;
 use Zend\View\Model\ViewModel;
 use PlaygroundCMS\Blocks\AbstractBlockController;
 
-class ArticleBlockController extends AbstractBlockController
+class ArticleController extends AbstractBlockController
 {
     protected $articleMapper;
     /**

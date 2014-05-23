@@ -11,6 +11,7 @@
 namespace PlaygroundPublishing\Mapper;
 
 use Doctrine\ORM\QueryBuilder;
+use PlaygroundPublishing\Entity\Category as CategoryEntity;
 
 class Category extends EntityMapper
 {
@@ -55,6 +56,15 @@ class Category extends EntityMapper
         );
     }
 
+    public function defaultFilters($query)
+    {
+
+        $query->andWhere("c.status = :status");
+        $query->setParameter('status',  CategoryEntity::CATEGORY_PUBLISHED);
+
+        return $query;
+    }
+
     /**
     * getSupportedFilters : déclaration des filtres supportés par l'entity Block
     *
@@ -77,7 +87,7 @@ class Category extends EntityMapper
     */
     public function filterOnTitle(QueryBuilder $query, $title)
     {
-        $query->where("c.title LIKE :title");
+        $query->andWhere("c.title LIKE :title");
         $query->setParameter('title', (string) $title);
 
         return $query;

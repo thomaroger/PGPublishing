@@ -57,8 +57,13 @@ class ArticleCategoryListController extends AbstractListController
 
         // Filtre sur la categorie
         $query->leftJoin('a.categories', 'c');
-        $query->where("c.id IN (".implode(',',$categoriesId).")");
+        $query->andwhere("c.id IN (".implode(',',$categoriesId).")");
 
+        // Filter par defaut
+        if (method_exists($this->getBlockMapper(), "defaultFilters")) {
+           $query = $this->getBlockMapper()->defaultFilters($query);
+        }
+        
 
         // Filtre sur l'article courant si entite courante
         if (get_class($entity) == 'PlaygroundPublishing\Entity\Article') {

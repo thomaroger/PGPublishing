@@ -11,6 +11,8 @@
 namespace PlaygroundPublishing\Mapper;
 
 use Doctrine\ORM\QueryBuilder;
+use PlaygroundPublishing\Entity\Tag as TagEntity;
+
 
 class Tag extends EntityMapper
 {
@@ -55,6 +57,15 @@ class Tag extends EntityMapper
         );
     }
 
+    public function defaultFilters($query)
+    {
+
+        $query->andWhere("t.status = :status");
+        $query->setParameter('status',  TagEntity::TAG_PUBLISHED);
+
+        return $query;
+    }
+
     /**
     * getSupportedFilters : déclaration des filtres supportés par l'entity Block
     *
@@ -77,7 +88,7 @@ class Tag extends EntityMapper
     */
     public function filterOnTitle(QueryBuilder $query, $title)
     {
-        $query->where("t.title LIKE :title");
+        $query->andWhere("t.title LIKE :title");
         $query->setParameter('title', (string) $title);
 
         return $query;
