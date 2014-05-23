@@ -68,7 +68,6 @@ class TagController extends AbstractActionController
         foreach ($ressources as $ressource) {
             $ressourcesCollection[$ressource->getRecordId()][$ressource->getLocale()] = $ressource;
         }
-
         
         return new ViewModel(array('tags'                 => $tags,
                                    'tagsPaginator'        => $tagsPaginator,
@@ -93,11 +92,13 @@ class TagController extends AbstractActionController
             $data = array_merge(
                     $request->getPost()->toArray(),
                     $request->getFiles()->toArray()
-            );
+            );            
 
             $return = $this->getTagService()->checkTag($data);
             $data = $return["data"];
             unset($return["data"]);
+            $data['tag']['status'] = (int) $data['tag']['status'];
+
 
             if ($return['status'] == 0) {
                 $this->getTagService()->create($data);
@@ -105,7 +106,6 @@ class TagController extends AbstractActionController
                 return $this->redirect()->toRoute('admin/playgroundpublishingadmin/tags');
             }
         }
-
 
         $credentials = Credential::$statusesForm;
         $tagStatuses = Tag::$statuses;

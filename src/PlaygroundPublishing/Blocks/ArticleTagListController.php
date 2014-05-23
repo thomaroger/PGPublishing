@@ -63,9 +63,11 @@ class ArticleTagListController extends AbstractListController
 
 
         // Filtre sur l'article si entite courante
-        if($block->getParam('current_entity', 0) == true) {
-            $query->andWhere("a.id != :id");
-            $query->setParameter('id', (int) $entity->getId());
+        if (get_class($entity) == 'PlaygroundPublishing\Entity\Article') {
+            if($block->getParam('current_entity', 0) == true) {
+                $query->andWhere("a.id != :id");
+                $query->setParameter('id', (int) $entity->getId());
+            }
         }
         
         $query = $this->addSort($query);   

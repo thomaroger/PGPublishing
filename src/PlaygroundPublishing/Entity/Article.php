@@ -770,11 +770,9 @@ class Article implements InputFilterAwareInterface
         }
 
         $currentTime = time();
-
         if (!($this->getStartDate()->getTimestamp() < $currentTime && $this->getEndDate()->getTimestamp() > $currentTime)) {
             return false;
         }
-
 
         return true;
     }

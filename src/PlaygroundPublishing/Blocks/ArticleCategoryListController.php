@@ -28,7 +28,6 @@ class ArticleCategoryListController extends AbstractListController
         $articles =  array();
         $categoriesId = array();
 
-
         if($block->getParam('current_entity', 0) == false) {
             // Pas d'utilisation d'entité courante
             $categoriesId = array($block->getParam('category'));
@@ -52,8 +51,7 @@ class ArticleCategoryListController extends AbstractListController
                 'ArticleCategoryListController::renderBlock have to a category for filter articles'
             ));
         }
-        
-        
+
         $query = $this->getBlockMapper()->getQueryBuilder();
         $query = $query->select('a')->from('PlaygroundPublishing\Entity\Article', 'a');
 
@@ -62,10 +60,12 @@ class ArticleCategoryListController extends AbstractListController
         $query->where("c.id IN (".implode(',',$categoriesId).")");
 
 
-        // Filtre sur l'article si entite courante
-        if($block->getParam('current_entity', 0) == true) {
-            $query->andWhere("a.id != :id");
-            $query->setParameter('id', (int) $entity->getId());
+        // Filtre sur l'article courant si entite courante
+        if (get_class($entity) == 'PlaygroundPublishing\Entity\Article') {
+            if($block->getParam('current_entity', 0) == true) {
+                $query->andWhere("a.id != :id");
+                $query->setParameter('id', (int) $entity->getId());
+            }
         }
         
         $query = $this->addSort($query);   

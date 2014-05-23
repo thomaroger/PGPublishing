@@ -145,6 +145,7 @@ class Category extends EventProvider implements ServiceManagerAwareInterface
     */
     public function checkCategory($data)
     {
+
           // Il faut au moins une plateforme d'activer
         if ($data['category']['web']['active'] == 0 && $data['category']['mobile']['active'] == 0) {
             

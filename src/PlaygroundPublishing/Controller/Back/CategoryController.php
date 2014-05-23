@@ -46,6 +46,7 @@ class CategoryController extends AbstractActionController
         $this->layout()->setVariable('nav', "content");
         $this->layout()->setVariable('subNav', "category");
         $categoriesId = array();
+        $ressourcesCollection = array();
     
         $p = $this->getRequest()->getQuery('page', 1);
 
@@ -94,6 +95,7 @@ class CategoryController extends AbstractActionController
             $return = $this->getCategoryService()->checkCategory($data);
             $data = $return["data"];
             unset($return["data"]);
+            $data['category']['status'] = (int) $data['category']['status'];
 
             if ($return['status'] == 0) {
                 $this->getCategoryService()->create($data);
