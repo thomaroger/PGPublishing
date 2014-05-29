@@ -17,6 +17,8 @@ use Doctrine\Common\Collections\Criteria;
 
 class CommentListController extends AbstractBlockController
 {
+    const MAX_PER_PAGE = 5;
+
     protected $commentService;
     /**
     * {@inheritdoc}
@@ -29,19 +31,21 @@ class CommentListController extends AbstractBlockController
         $ressource = $this->getRessource();
         $data = array();
         $return = array();
+        $p = $this->getRequest()->getQuery('page', 1);
+
 
         $filters = array('article' => $article, 
                          'locale' => $ressource->getLocale(),
                          'status' => Comment::COMMENT_PUBLISHED);
 
         $comments = $this->getCommentService()->getCommentMapper()->findByAndOrderBy($filters, array('updated_at' => Criteria::DESC) );
-
-        /*
-        Mettre en param le nombre de commentaire
+        $nbComments = count($comments);
+        
+        //Mettre en param le nombre de commentaire
         $commentsPaginator = new \Zend\Paginator\Paginator(new \Zend\Paginator\Adapter\ArrayAdapter($comments));
         $commentsPaginator->setItemCountPerPage(self::MAX_PER_PAGE);
         $commentsPaginator->setCurrentPageNumber($p);
-        */
+        
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -69,7 +73,10 @@ class CommentListController extends AbstractBlockController
                         'ressource' => $ressource,
                         'data'      => $data,
                         'return'    => $return,
-                        'comments'  => $comments);
+                        'comments'  => $comments,
+                        'uri'       => $request->getUri()->getPath(),
+                        'nbComments' => $nbComments,
+                        'commentsPaginator'  => $commentsPaginator);
 
         $model = new ViewModel($params);
         
