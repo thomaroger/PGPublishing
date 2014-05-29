@@ -187,6 +187,43 @@ return array(
                                     ),
                                 ), 
                             ),
+                            'comments' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/comments[/:filter][/:p]',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Comment',
+                                        'action'     => 'list',
+                                    ),
+                                ),    
+                            ),
+                            'comment_moderate' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/comment/moderate/:id/:state',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Comment',
+                                        'action'     => 'moderate',
+                                    ),
+                                    'constraints' => array(
+                                        'id' => '[0-9]+',
+                                        'state' => '[0-9]+',
+                                    ),
+                                ), 
+                            ),
+                            'comment_remove' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/comment/remove/:id',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Comment',
+                                        'action'     => 'remove',
+                                    ),
+                                    'constraints' => array(
+                                        'id' => '[0-9]+',
+                                    ),
+                                ), 
+                            ),
                             'tags' => array(
                                 'type' => 'Segment',
                                 'options' => array(
@@ -253,6 +290,7 @@ return array(
 
             'PlaygroundPublishing\Controller\Back\Article'  => 'PlaygroundPublishing\Controller\Back\ArticleController',
             'PlaygroundPublishing\Controller\Back\Category' => 'PlaygroundPublishing\Controller\Back\CategoryController',
+            'PlaygroundPublishing\Controller\Back\Comment' => 'PlaygroundPublishing\Controller\Back\CommentController',
             'PlaygroundPublishing\Controller\Back\Tag'      => 'PlaygroundPublishing\Controller\Back\TagController',
         ),
     ),

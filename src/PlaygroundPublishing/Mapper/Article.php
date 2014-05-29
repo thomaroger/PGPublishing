@@ -93,6 +93,7 @@ class Article extends EntityMapper
     */
     public function filterOnTitle(QueryBuilder $query, $title)
     {
+        
         $query->andWhere("a.title LIKE :title");
         $query->setParameter('title', (string) $title);
 
