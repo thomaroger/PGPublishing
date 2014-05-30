@@ -62,8 +62,22 @@ class Module
                     return new Mapper\Comment($sm->get('playgroundpublishing_doctrine_em'), $sm->get('playgroundpublishing_module_options'));
                 },
 
+                'playgroundpublishing_poll_mapper' => function  ($sm) {
+                    return new Mapper\Poll($sm->get('playgroundpublishing_doctrine_em'), $sm->get('playgroundpublishing_module_options'));
+                },
+
+                'playgroundpublishing_answer_mapper' => function  ($sm) {
+                    return new Mapper\Answer($sm->get('playgroundpublishing_doctrine_em'), $sm->get('playgroundpublishing_module_options'));
+                },
+
                 'playgroundpublishing-blocks-article-form' => function  ($sm) {
                     $form = new Form\ArticleForm(null, $sm);
+
+                    return $form;
+                },
+
+                'playgroundpublishing-blocks-poll-form' => function  ($sm) {
+                    $form = new Form\PollForm(null, $sm);
 
                     return $form;
                 },
@@ -111,6 +125,8 @@ class Module
                 'playgroundpublishing_tag_service'      => 'PlaygroundPublishing\Service\Tag',
                 'playgroundpublishing_article_service'  => 'PlaygroundPublishing\Service\Article',
                 'playgroundpublishing_comment_service'  => 'PlaygroundPublishing\Service\Comment',
+                'playgroundpublishing_poll_service'     => 'PlaygroundPublishing\Service\Poll',
+                'playgroundpublishing_answer_service'   => 'PlaygroundPublishing\Service\Answer',
 
             ),
         );

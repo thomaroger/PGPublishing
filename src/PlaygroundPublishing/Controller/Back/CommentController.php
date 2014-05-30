@@ -37,7 +37,7 @@ class CommentController extends AbstractActionController
         $this->layout()->setVariable('subNav', "comment");
         $p = $this->getRequest()->getQuery('page', 1);
 
-        $comments = $this->getCommentService()->getCommentMapper()->findAll();
+        $comments = $this->getCommentService()->getCommentMapper()->findByAndOrderBy(array(), array('created_at' => 'DESC'));
         
         $nbComments = count($comments);
 

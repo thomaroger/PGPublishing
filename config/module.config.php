@@ -67,12 +67,25 @@ return array(
             'may_terminate' => true,
             ),
 
-            'tag' => array(
+            'category' => array(
                 'type' => 'PlaygroundCMS\Router\Http\RegexSlash',
                 'options' => array(
                   'regex'    => '\/(?<locale>([a-z_]{5}+))\/(categorie|category)\/(?<slugiverse>([\/a-z0-9-]+))-(?<id>([0-9]+)).(?<format>([xml|html|json]+))\/?',
                   'defaults' => array(
                     'controller' => 'PlaygroundPublishing\Controller\Front\Category',
+                    'action'     => 'index',
+                  ),
+                  'spec' => '',
+                ),
+            'may_terminate' => true,
+            ),
+
+            'poll' => array(
+                'type' => 'PlaygroundCMS\Router\Http\RegexSlash',
+                'options' => array(
+                  'regex'    => '\/(?<locale>([a-z_]{5}+))\/(sondage|poll)\/(?<slugiverse>([\/a-z0-9-]+))-(?<id>([0-9]+)).(?<format>([xml|html|json]+))\/?',
+                  'defaults' => array(
+                    'controller' => 'PlaygroundPublishing\Controller\Front\Poll',
                     'action'     => 'index',
                   ),
                   'spec' => '',
@@ -270,6 +283,52 @@ return array(
                                     ),
                                 ), 
                             ),
+                            'polls' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/polls[/:filter][/:p]',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Poll',
+                                        'action'     => 'list',
+                                    ),
+                                ),    
+                            ),
+                            'poll_create' => array(
+                                'type' => 'Literal',
+                                'options' => array(
+                                    'route' => '/poll/create',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Poll',
+                                        'action'     => 'create',
+                                    ),
+                                ), 
+                            ),
+                            'poll_edit' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/poll/edit/:id',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Poll',
+                                        'action'     => 'edit',
+                                    ),
+                                    'constraints' => array(
+                                        'id' => '[0-9]+',
+                                    ),
+                                ), 
+                            ),
+                            'poll_remove' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/poll/remove/:id',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Poll',
+                                        'action'     => 'remove',
+                                    ),
+                                    'constraints' => array(
+                                        'id' => '[0-9]+',
+                                    ),
+                                ), 
+                            ),
                         ),
                     ),
                 ),
@@ -287,10 +346,12 @@ return array(
             'PlaygroundPublishing\Controller\Front\Article'  => 'PlaygroundPublishing\Controller\Front\ArticleController',
             'PlaygroundPublishing\Controller\Front\Category' => 'PlaygroundPublishing\Controller\Front\CategoryController',
             'PlaygroundPublishing\Controller\Front\Tag'      => 'PlaygroundPublishing\Controller\Front\TagController',
+            'PlaygroundPublishing\Controller\Front\Poll'      => 'PlaygroundPublishing\Controller\Front\PollController',
 
             'PlaygroundPublishing\Controller\Back\Article'  => 'PlaygroundPublishing\Controller\Back\ArticleController',
             'PlaygroundPublishing\Controller\Back\Category' => 'PlaygroundPublishing\Controller\Back\CategoryController',
             'PlaygroundPublishing\Controller\Back\Comment' => 'PlaygroundPublishing\Controller\Back\CommentController',
+            'PlaygroundPublishing\Controller\Back\Poll' => 'PlaygroundPublishing\Controller\Back\PollController',
             'PlaygroundPublishing\Controller\Back\Tag'      => 'PlaygroundPublishing\Controller\Back\TagController',
         ),
     ),
