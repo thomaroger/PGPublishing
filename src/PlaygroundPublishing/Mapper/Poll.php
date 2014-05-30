@@ -51,21 +51,21 @@ class Poll extends EntityMapper
     {
         
         return array(
-            'title' => 'a.title',
-            'updatedAt' => 'a.updated_at',
+            'title' => 'p.title',
+            'updatedAt' => 'p.updated_at',
         );
     }
 
     public function defaultFilters($query)
     {
         // Status publié
-        $query->andWhere("a.status = :status");
-        $query->setParameter('status',  PollEntity::POOL_PUBLISHED);
+        $query->andWhere("p.status = :status");
+        $query->setParameter('status',  PollEntity::POLL_PUBLISHED);
 
         // Période entre la date de debut et la date de fin
         $currentTime = date('Y-m-d h:i:s');
-        $query->andWhere("a.startDate < :currentDate");
-        $query->andWhere("a.endDate > :currentDate");
+        $query->andWhere("p.startDate < :currentDate");
+        $query->andWhere("p.endDate > :currentDate");
         $query->setParameter('currentDate',  $currentTime);
 
         return $query;
@@ -94,7 +94,7 @@ class Poll extends EntityMapper
     public function filterOnTitle(QueryBuilder $query, $title)
     {
         
-        $query->andWhere("a.title LIKE :title");
+        $query->andWhere("p.title LIKE :title");
         $query->setParameter('title', (string) $title);
 
         return $query;

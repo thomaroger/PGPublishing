@@ -100,6 +100,12 @@ class Module
                     return $form;
                 },
 
+                'playgroundpublishing-blocks-polllist-form'  => function  ($sm) {
+                    $form = new Form\PollListForm(null, $sm);
+
+                    return $form;
+                },
+
                 'playgroundpublishing-blocks-taglist-form'  => function  ($sm) {
                     $form = new Form\TagListForm(null, $sm);
 
