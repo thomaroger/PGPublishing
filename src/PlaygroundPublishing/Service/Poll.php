@@ -120,7 +120,7 @@ class Poll extends EventProvider implements ServiceManagerAwareInterface
             $poll->setIsMobile(1);
             $layoutContext['mobile'] = $data['poll']['mobile']['layout'];
         }
-        $poll->setStatus(ArticleEntity::ARTICLE_DRAFT);
+        $poll->setStatus(PollEntity::POLL_DRAFT);
 
         if (!empty($data['poll']['status'])) {
             $poll->setStatus($data['poll']['status']);
@@ -136,7 +136,7 @@ class Poll extends EventProvider implements ServiceManagerAwareInterface
 
 
         $slugify = new Slugify;
-        $locales = $this->getPollMapper()->findBy(array('active_front' => 1));
+        $locales = $this->getLocaleMapper()->findBy(array('active_front' => 1));
 
         $repository = $this->getPollMapper()->getEntityManager()->getRepository($poll->getTranslationRepository());
 

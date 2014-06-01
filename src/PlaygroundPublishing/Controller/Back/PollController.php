@@ -152,10 +152,10 @@ class PollController extends AbstractActionController
             return $this->redirect()->toRoute('admin/playgroundpublishingadmin/polls');
         }
 
-        $translations = $this->getPollService()->getPollMapper()->getEntityRepositoryForEntity($article->getTranslationRepository())->findTranslations($poll);
+        $translations = $this->getPollService()->getPollMapper()->getEntityRepositoryForEntity($poll->getTranslationRepository())->findTranslations($poll);
         $poll->setTranslations($translations);
 
-        $ressources = $this->getRessourceService()->getRessourceMapper()->findBy(array('model' => 'PlaygroundPublishing\Entity\Poll', 'recordId' => $articleId));
+        $ressources = $this->getRessourceService()->getRessourceMapper()->findBy(array('model' => 'PlaygroundPublishing\Entity\Poll', 'recordId' => $pollId));
         if ($request->isPost()) {
             $data = array_merge(
                     $request->getPost()->toArray(),
