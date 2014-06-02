@@ -25,6 +25,8 @@ class Poll extends EventProvider implements ServiceManagerAwareInterface
      */
     protected $pollMapper;
 
+    protected $answerService;
+
     /**
      * @var Zend\ServiceManager\ServiceManager ServiceManager
      */
@@ -93,6 +95,8 @@ class Poll extends EventProvider implements ServiceManagerAwareInterface
             }   
         }
 
+        $poll = $this->getAnswserService()->create($poll, $data);
+
         $poll = $this->getPollMapper()->persist($poll);
         $poll = $this->getPollMapper()->findById($poll->getId());
         
@@ -153,6 +157,8 @@ class Poll extends EventProvider implements ServiceManagerAwareInterface
             }   
         }
 
+        $poll = $this->getAnswserService()->edit($poll, $data);
+
         $poll = $this->getPollMapper()->update($poll);
     
         $poll->editRessource($this->getPollMapper(), $locales);
@@ -166,7 +172,11 @@ class Poll extends EventProvider implements ServiceManagerAwareInterface
     */
     public function checkPoll($data)
     {
-        // Valeur par défaut
+        $return = $this->getAnswserService()->checkAnswser($data);
+        if ($return['status'] == 1) {
+
+            return $return;
+        }
 
         $data['poll']['status'] = (int) $data['poll']['status'];
 
@@ -244,8 +254,6 @@ class Poll extends EventProvider implements ServiceManagerAwareInterface
             return array('status' => 1, 'message' => 'The start date is required', 'data' => $data);        
         }
 
-      
-
         return array('status' => 0, 'message' => '', 'data' => $data);
     }
 
@@ -261,6 +269,20 @@ class Poll extends EventProvider implements ServiceManagerAwareInterface
         }
 
         return $this->pollMapper;
+    }
+
+    /**
+     * getArticleMapper : Getter pour articleMapper
+     *
+     * @return PlaygroundPublishing\Mapper\Article $articleMapper
+     */
+    public function getAnswserService()
+    {
+        if (null === $this->answerService) {
+            $this->answerService = $this->getServiceManager()->get('playgroundpublishing_answer_service');
+        }
+
+        return $this->answerService;
     }
 
     /**
