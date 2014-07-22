@@ -40,14 +40,18 @@ class Answer extends EventProvider implements ServiceManagerAwareInterface
     * create : Permet de créer une page
     * @param array $data : tableau de données 
     */
-    public function create($poll, $data)
+    public function create($poll, $data, $locales)
     {   
-        // Modifier le tableau pour prendre en compte les locales par answers et non les answers par locale
-        $locales = $this->getLocaleMapper()->findBy(array('active_front' => 1));
-        $title = false;
         foreach ($locales as $locale) {
-
+            $locale = $locale->getLocale();
+            if (!empty($data['poll'][$locale])) {
+                if (!empty($data['poll'][$locale]['answer'])) {
+                    //var_dump($data['poll'][$locale]['answer']);
+                }
+            }
         }
+        //die;
+
         return $poll;
     }
 
@@ -66,6 +70,7 @@ class Answer extends EventProvider implements ServiceManagerAwareInterface
             }
         }
         //die;
+        
         return $poll;
     }
 
