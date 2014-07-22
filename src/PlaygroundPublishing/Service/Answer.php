@@ -55,9 +55,18 @@ class Answer extends EventProvider implements ServiceManagerAwareInterface
     * edit : Permet d'editer une page
     * @param array $data : tableau de données 
     */
-    public function edit($poll, $data){
+    public function edit($poll, $data, $locales){
 
-       
+        foreach ($locales as $locale) {
+            $locale = $locale->getLocale();
+            if (!empty($data['poll'][$locale])) {
+                if (!empty($data['poll'][$locale]['answer'])) {
+                    //var_dump($data['poll'][$locale]['answer']);
+                }
+            }
+        }
+        //die;
+        return $poll;
     }
 
     /**

@@ -157,7 +157,7 @@ class Poll extends EventProvider implements ServiceManagerAwareInterface
             }   
         }
 
-        $poll = $this->getAnswserService()->edit($poll, $data);
+        $poll = $this->getAnswserService()->edit($poll, $data, $locales);
 
         $poll = $this->getPollMapper()->update($poll);
     
