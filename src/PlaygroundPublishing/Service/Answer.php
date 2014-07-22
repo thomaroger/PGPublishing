@@ -42,15 +42,13 @@ class Answer extends EventProvider implements ServiceManagerAwareInterface
     */
     public function create($poll, $data, $locales)
     {   
-        foreach ($locales as $locale) {
-            $locale = $locale->getLocale();
-            if (!empty($data['poll'][$locale])) {
-                if (!empty($data['poll'][$locale]['answer'])) {
-                    //var_dump($data['poll'][$locale]['answer']);
-                }
-            }
+        $answers = $this->decorateAnswers($data, $locales);
+
+        if(empty($answers)){
+            return $poll;
         }
-        //die;
+            
+        //var_dump($answers);die; 
 
         return $poll;
     }
@@ -60,18 +58,37 @@ class Answer extends EventProvider implements ServiceManagerAwareInterface
     * @param array $data : tableau de données 
     */
     public function edit($poll, $data, $locales){
+        
+        $answers = $this->decorateAnswers($data, $locales);
 
+        if(empty($answers)){
+            return $poll;
+        }
+            
+        //var_dump($answers);die;        
+        
+        return $poll;
+    }
+
+
+    function decorateAnswers($data, $locales) 
+    {
+        $answers = array();
         foreach ($locales as $locale) {
             $locale = $locale->getLocale();
             if (!empty($data['poll'][$locale])) {
                 if (!empty($data['poll'][$locale]['answer'])) {
-                    //var_dump($data['poll'][$locale]['answer']);
+                    foreach ($data['poll'][$locale]['answer'] as $key => $value) {
+                        if(!empty($value)) {
+                            $answers[$key][$locale] = $value;
+                        }
+                    }
                 }
+
             }
         }
-        //die;
-        
-        return $poll;
+
+        return $answers;
     }
 
     /**
