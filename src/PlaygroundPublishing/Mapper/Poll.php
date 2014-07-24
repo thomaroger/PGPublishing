@@ -63,7 +63,7 @@ class Poll extends EntityMapper
         $query->setParameter('status',  PollEntity::POLL_PUBLISHED);
 
         // Période entre la date de debut et la date de fin
-        $currentTime = date('Y-m-d h:i:s');
+        $currentTime = date('Y-m-d H:i:s');
         $query->andWhere("p.startDate < :currentDate");
         $query->andWhere("p.endDate > :currentDate");
         $query->setParameter('currentDate',  $currentTime);

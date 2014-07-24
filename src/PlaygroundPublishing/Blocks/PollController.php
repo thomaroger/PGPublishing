@@ -24,11 +24,13 @@ class PollController extends AbstractBlockController
     {
         $block = $this->getBlock();
         $poll = $this->getEntity();
+        $answers = $poll->getAnswers();
         $ressource = $this->getRessource();
 
         $params = array('block' => $block,
                         'em' => $this->getPollMapper()->getEntityManager(),
                         'poll' => $poll,
+                        'answers' => $answers,
                         'ressource' => $ressource);
 
         $model = new ViewModel($params);

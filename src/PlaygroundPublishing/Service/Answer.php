@@ -47,8 +47,21 @@ class Answer extends EventProvider implements ServiceManagerAwareInterface
         if(empty($answers)){
             return $poll;
         }
-            
-        //var_dump($answers);die; 
+        $answerEntity = new AnswerEntity();
+        $repository = $this->getAnswerMapper()->getEntityManager()->getRepository($answerEntity->getTranslationRepository());
+
+        foreach ($answers as $answer) {
+            $answerEntity = new AnswerEntity();
+            $answerEntity->setCount(0);
+            $answerEntity->setPoll($poll);
+
+            foreach ($answer as $locale => $value) {
+                $repository->translate($answerEntity, 'answer', $locale, $value);
+            }
+
+            $answerEntity = $this->getAnswerMapper()->persist($answerEntity);
+
+        }
 
         return $poll;
     }

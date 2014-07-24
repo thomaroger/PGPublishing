@@ -27,6 +27,11 @@ class PollController extends AbstractActionController
     protected $pollService;
 
     /**
+    * @var Service $pageService Service de page
+    */
+    protected $answerService;
+
+    /**
     * @var Ressource $ressourceService  Service de ressource
     */
     protected $ressourceService;
@@ -177,11 +182,18 @@ class PollController extends AbstractActionController
         $layouts = $this->getLayoutService()->getLayoutMapper()->findAll();
         $locales = $this->getLocaleService()->getLocaleMapper()->findBy(array('active_front' => 1));
 
+        $answers = $poll->getAnswers();
+        foreach ($answers as $answer) {
+            $translations = $this->getAnswerService()->getAnswerMapper()->getEntityRepositoryForEntity($answer->getTranslationRepository())->findTranslations($answer);
+            $answer->setTranslations($translations);
+        }
+
         return new ViewModel(array('credentials'      => $credentials,
                                    'pollsStatuses'    => $pollsStatuses,
                                    'layouts'          => $layouts,
                                    'locales'          => $locales,
                                    'poll'             => $poll,
+                                   'answers'          => $answers,
                                    'ressources'       => $ressources,
                                    'return'           => $return));
     }
@@ -228,6 +240,20 @@ class PollController extends AbstractActionController
         }
 
         return $this->pollService;
+    }
+
+    /**
+    * getTagService : Recuperation du service de tag
+    *
+    * @return Tag $tagService 
+    */
+    private function getAnswerService()
+    {
+        if (!$this->answerService) {
+            $this->answerService = $this->getServiceLocator()->get('playgroundpublishing_answer_service');
+        }
+
+        return $this->answerService;
     }
 
     /**

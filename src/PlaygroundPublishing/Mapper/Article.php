@@ -63,7 +63,7 @@ class Article extends EntityMapper
         $query->setParameter('status',  ArticleEntity::ARTICLE_PUBLISHED);
 
         // Période entre la date de debut et la date de fin
-        $currentTime = date('Y-m-d h:i:s');
+        $currentTime = date('Y-m-d H:i:s');
         $query->andWhere("a.startDate < :currentDate");
         $query->andWhere("a.endDate > :currentDate");
         $query->setParameter('currentDate',  $currentTime);

@@ -46,7 +46,7 @@ class Answer implements InputFilterAwareInterface
     /**
      * @ORM\ManyToOne(targetEntity="PlaygroundPublishing\Entity\Poll", inversedBy="answers")
      */
-    protected $question;
+    protected $poll;
 
 
     /**
@@ -58,6 +58,16 @@ class Answer implements InputFilterAwareInterface
      * @ORM\Column(type="datetime")
      */
     protected $updated_at;
+
+     /**
+     * @Gedmo\Locale
+     * Used locale to override Translation listener`s locale
+     * this is not a mapped field of entity metadata, just a simple property
+     */
+     protected $locale = 'en_US';
+
+     
+    protected $translations;
 
 
     /**
@@ -102,9 +112,9 @@ class Answer implements InputFilterAwareInterface
      * @param string $question
      * @return Answer
      */
-    public function setQuestion($question)
+    public function setPoll($poll)
     {
-        $this->question = $question;
+        $this->poll = $poll;
 
         return $this;
     }
@@ -112,9 +122,9 @@ class Answer implements InputFilterAwareInterface
     /**
      * @return string $question
      */
-    public function getQuestion()
+    public function getPoll()
     {
-        return $this->question;
+        return $this->poll;
     }
     
 
@@ -227,5 +237,62 @@ class Answer implements InputFilterAwareInterface
             $this->inputFilter = $inputFilter;
         }
         return $this->inputFilter;
+    }
+
+    /**
+    * getTranslationRepository :  Recuperation de l'entite PageTranslation
+    *
+    * @return string 
+    */
+    public function getTranslationRepository()
+    {
+        return 'PlaygroundPublishing\Entity\Translation\AnswerTranslation';
+    }
+
+    /**
+    * setTranslatableLocale : Setter pour la locale
+    * @param string $locale
+    *
+    * @return Page 
+    */
+    public function setTranslatableLocale($locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+
+    /**
+    * getTranslatableLocale : Getter pour la  locale
+    *
+    * @return  string $locale
+    */
+    public function getTranslatableLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+    * getTranslations : Getter pour les traductions
+    *
+    * @return  array $translations
+    */
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+     /**
+    * getTranslations : Setter pour les traductions
+    * @param array $translation 
+    *
+    * @return Page 
+    */
+    public function setTranslations($translations)
+    {
+        $this->translations = $translations;
+
+        return $this;
     }
 }

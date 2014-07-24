@@ -20,7 +20,7 @@ use Gedmo\Translatable\Entity\MappedSuperclass\AbstractTranslation;
  * Gedmo\Translatable\Entity\Translation
  *
  * @Table(
- *         name="ppublishing_poll_answer_translations",
+ *         name="publishing_poll_answer_translations",
  *         indexes={@index(name="answer_translations_lookup_idx", columns={
  *             "locale", "object_class", "foreign_key"
  *         })},
