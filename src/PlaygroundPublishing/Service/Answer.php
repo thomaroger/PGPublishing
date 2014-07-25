@@ -137,6 +137,28 @@ class Answer extends EventProvider implements ServiceManagerAwareInterface
         return array('status' => 0, 'message' => '', 'data' => $data);
     }
 
+
+    public function addVoteToAnAnswer($data)
+    {
+        if (empty($data['poll'])) {
+            
+            return false;
+        }
+
+        $answer = $this->getAnswerMapper()->findById($data['poll']);
+
+        if(empty($answer)){
+
+            return false;
+        }
+
+        $answer->setCount($answer->getCount() + 1);
+        
+        $answer = $this->getAnswerMapper()->update($answer);
+
+        return true;
+    }
+
     /**
      * getArticleMapper : Getter pour articleMapper
      *

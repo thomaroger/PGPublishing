@@ -27,6 +27,17 @@ class PollController extends AbstractBlockController
         $answers = $poll->getAnswers();
         $ressource = $this->getRessource();
 
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = array_merge(
+                    $request->getPost()->toArray(),
+                    $request->getFiles()->toArray()
+            );
+
+            $this->getAnswerService()->addVoteToAnAnswer($data);
+        }
+
         $params = array('block' => $block,
                         'em' => $this->getPollMapper()->getEntityManager(),
                         'poll' => $poll,
@@ -61,6 +72,15 @@ class PollController extends AbstractBlockController
         }
 
         return $this->pollMapper;
+    }
+
+    public function getAnswerService()
+    {
+        if (empty($this->answserService)) {
+            $this->answserService = $this->getServiceManager()->get('playgroundpublishing_answer_service');
+        }
+
+        return $this->answserService;
     }
 
    

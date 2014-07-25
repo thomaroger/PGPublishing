@@ -29,4 +29,13 @@ class Answer extends EntityMapper
 
         return $this->er;
     }
+
+    public function persist($entity)
+    {
+        $this->em->persist($entity);
+        $this->em->getClassMetadata('PlaygroundCMS\Entity\Zone')->changeTrackingPolicy = ClassMetadataInfo::CHANGETRACKING_DEFERRED_EXPLICIT;
+        $this->em->flush();
+
+        return $entity;
+    }
 }
