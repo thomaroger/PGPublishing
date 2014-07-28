@@ -77,8 +77,26 @@ class Answer extends EventProvider implements ServiceManagerAwareInterface
         if(empty($answers)){
             return $poll;
         }
+
+        $answerEntity = new AnswerEntity();
+        $repository = $this->getAnswerMapper()->getEntityManager()->getRepository($answerEntity->getTranslationRepository());
             
-        //var_dump($answers);die;        
+
+        foreach ($answers as $id => $answer) {
+            $answerEntity = $this->getAnswerMapper()->findById($id);
+            if(empty($answerEntity)) {
+                $answerEntity = new AnswerEntity();
+                $answerEntity->setCount(0);
+            }
+            $answerEntity->setPoll($poll);
+
+            foreach ($answer as $locale => $value) {
+                $repository->translate($answerEntity, 'answer', $locale, $value);
+            }
+
+            $answerEntity = $this->getAnswerMapper()->persist($answerEntity);
+
+        }  
         
         return $poll;
     }
@@ -119,16 +137,9 @@ class Answer extends EventProvider implements ServiceManagerAwareInterface
         foreach ($locales as $locale) {
             if(!empty($data['poll'][$locale->getLocale()])) {
                 if(!empty($data['poll'][$locale->getLocale()]['answer'])) {
-
                     if(count($data['poll'][$locale->getLocale()]['answer']) == 1) {
 
                         return array('status' => 1, 'message' => 'You must have an answer for this poll', 'data' => $data);
-                    }
-                    foreach ($data['poll'][$locale->getLocale()]['answer'] as $key => $value) {
-                        if ($key != 0 && empty($value)) {
-
-                            return array('status' => 1, 'message' => 'Answer is required', 'data' => $data);
-                        } 
                     }
                 }
             }

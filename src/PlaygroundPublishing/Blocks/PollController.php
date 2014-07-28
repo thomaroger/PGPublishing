@@ -22,10 +22,14 @@ class PollController extends AbstractBlockController
     */
     protected function renderBlock()
     {
+        $result = false;
         $block = $this->getBlock();
         $poll = $this->getEntity();
         $answers = $poll->getAnswers();
         $ressource = $this->getRessource();
+        $nbVote = 0;
+        $maxVote = 0;
+        $equals = true;
 
 
         $request = $this->getRequest();
@@ -36,13 +40,24 @@ class PollController extends AbstractBlockController
             );
 
             $this->getAnswerService()->addVoteToAnAnswer($data);
+            $result = true;
         }
 
-        $params = array('block' => $block,
-                        'em' => $this->getPollMapper()->getEntityManager(),
-                        'poll' => $poll,
-                        'answers' => $answers,
-                        'ressource' => $ressource);
+        foreach ($answers as $answer) {
+            $nbVote += $answer->getCount();
+            if ($answer->getCount() > $maxVote) {
+                $maxVote = $answer->getCount();
+            }
+        }
+
+        $params = array('block'     => $block,
+                        'em'        => $this->getPollMapper()->getEntityManager(),
+                        'poll'      => $poll,
+                        'answers'   => $answers,
+                        'ressource' => $ressource,
+                        'maxVote'   => $maxVote,
+                        'nbVote'    => $nbVote,
+                        'result'    => $result);
 
         $model = new ViewModel($params);
         
