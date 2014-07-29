@@ -50,6 +50,10 @@ class PollController extends AbstractBlockController
             }
         }
 
+        if ($poll->isFinished()) {
+            $result = true;
+        }
+
         $params = array('block'     => $block,
                         'em'        => $this->getPollMapper()->getEntityManager(),
                         'poll'      => $poll,

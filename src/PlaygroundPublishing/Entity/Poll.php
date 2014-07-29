@@ -671,11 +671,27 @@ class Poll implements InputFilterAwareInterface
         }
 
         $currentTime = time();
-        if (!($this->getStartDate()->getTimestamp() < $currentTime && $this->getEndDate()->getTimestamp() > $currentTime)) {
+        if (!($this->getStartDate()->getTimestamp() < $currentTime /*&& $this->getEndDate()->getTimestamp() > $currentTime */)) {
             return false;
         }
 
         return true;
+    }
+
+
+    /**
+    * isFinish : Permet de savoir si un sondage est fini
+    *
+    * @return boolean $result
+    */
+    public function isFinished()
+    {
+        $currentTime = time();
+        if ($this->getEndDate()->getTimestamp() <= $currentTime) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
