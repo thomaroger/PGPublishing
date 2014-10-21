@@ -38,7 +38,7 @@ class CommentListController extends AbstractBlockController
                          'locale' => $ressource->getLocale(),
                          'status' => Comment::COMMENT_PUBLISHED);
 
-        $comments = $this->getCommentService()->getCommentMapper()->findByAndOrderBy($filters, array('updated_at' => Criteria::DESC) );
+        $comments = $this->getCommentService()->getCommentMapper()->findByAndOrderBy($filters, array('updated_at' => Criteria::DESC));
         $nbComments = count($comments);
         
         //Mettre en param le nombre de commentaire
