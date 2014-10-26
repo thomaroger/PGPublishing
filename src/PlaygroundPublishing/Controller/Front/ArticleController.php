@@ -9,9 +9,9 @@
 namespace PlaygroundPublishing\Controller\Front;
 
 use Zend\View\Model\ViewModel;
-use PlaygroundCMS\Controller\Front\AbstractActionController;
+use PlaygroundCMS\Controller\Front\AbstractEntityActionController;
 
-class ArticleController extends AbstractActionController
+class ArticleController extends AbstractEntityActionController
 {
     /**
     * indexAction : Index du Controller de page
@@ -37,8 +37,16 @@ class ArticleController extends AbstractActionController
             return;
         }
 
-        $viewModel = new ViewModel(array('entity' => $entity));
+
+        $format = $this->getEvent()->getRouteMatch()->getParam('format');
+        if($format != 'html'){
+            
+            return $this->renderEntityForExport("PlaygroundPublishing\Blocks\ArticleController");
+
+        }
         
+        $viewModel = new ViewModel(array('entity' => $entity));
+            
         return $viewModel->setTemplate($this->getTemplate());
     }
 }

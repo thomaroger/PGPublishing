@@ -9,9 +9,9 @@
 namespace PlaygroundPublishing\Controller\Front;
 
 use Zend\View\Model\ViewModel;
-use PlaygroundCMS\Controller\Front\AbstractActionController;
+use PlaygroundCMS\Controller\Front\AbstractEntityActionController;
 
-class PollController extends AbstractActionController
+class PollController extends AbstractEntityActionController
 {
     /**
     * indexAction : Index du Controller de page
@@ -37,8 +37,16 @@ class PollController extends AbstractActionController
             return;
         }
 
-        $viewModel = new ViewModel(array('entity' => $entity));
+        $format = $this->getEvent()->getRouteMatch()->getParam('format');
+        if($format != 'html'){
+            
+            return $this->renderEntityForExport("PlaygroundPublishing\Blocks\PollController");
+
+        }
         
+        $viewModel = new ViewModel(array('entity' => $entity));
+            
         return $viewModel->setTemplate($this->getTemplate());
+
     }
 }

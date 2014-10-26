@@ -40,7 +40,6 @@ return array(
    
     'router' => array(
         'routes' => array(   
-            // http://dev.pgcms.fr/fr/article/mon-article-1.html Page entity article
             'article' => array(
                 'type' => 'PlaygroundCMS\Router\Http\RegexSlash',
                 'options' => array(
