@@ -41,7 +41,7 @@ class ArticleController extends AbstractEntityActionController
         $format = $this->getEvent()->getRouteMatch()->getParam('format');
         if($format != 'html'){
             
-            return $this->renderEntityForExport("PlaygroundPublishing\Blocks\ArticleController");
+            return $this->renderEntityForExport();
 
         }
         

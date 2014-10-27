@@ -43,6 +43,8 @@ class Poll implements InputFilterAwareInterface
 
     public static $pollTranslate = array('fr_FR' => "sondage",
                                          'en_US' => "poll");
+
+    const POLL_BLOCK_DETAIL_TYPE = "PlaygroundPublishing\Blocks\PollController";
     /** 
     * @var InputFilter $inputFilter
     */
@@ -814,6 +816,11 @@ class Poll implements InputFilterAwareInterface
         $this->translations = $translations;
 
         return $this;
+    }
+
+    public function getEntityBlockDetail()
+    {
+        return self::POLL_BLOCK_DETAIL_TYPE;
     }
 
 }

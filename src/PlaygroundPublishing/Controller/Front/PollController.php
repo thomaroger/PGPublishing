@@ -40,7 +40,7 @@ class PollController extends AbstractEntityActionController
         $format = $this->getEvent()->getRouteMatch()->getParam('format');
         if($format != 'html'){
             
-            return $this->renderEntityForExport("PlaygroundPublishing\Blocks\PollController");
+            return $this->renderEntityForExport();
 
         }
         

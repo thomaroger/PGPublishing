@@ -40,6 +40,8 @@ class Article implements InputFilterAwareInterface
                                     self::ARTICLE_PENDING => "Pending Review",
                                     self::ARTICLE_PUBLISHED => "Published",
                                     self::ARTICLE_REFUSED => "Refused");
+
+    const ARTICLE_BLOCK_DETAIL_TYPE = "PlaygroundPublishing\Blocks\ArticleController";
     /** 
     * @var InputFilter $inputFilter
     */
@@ -897,6 +899,11 @@ class Article implements InputFilterAwareInterface
         $this->translations = $translations;
 
         return $this;
+    }
+
+    public function getEntityBlockDetail()
+    {
+        return self::ARTICLE_BLOCK_DETAIL_TYPE;
     }
 
 }
