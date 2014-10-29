@@ -92,6 +92,8 @@ class Tag extends EventProvider implements ServiceManagerAwareInterface
     public function edit($data)
     {
         $tag = $this->getTagMapper()->findById($data['tag']['id']);
+        $this->getServiceManager()->get('playgroundcms_revision_service')->createRevision($tag);
+
         
         $tag->setStatus(TagEntity::TAG_REFUSED);
 

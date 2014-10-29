@@ -110,6 +110,8 @@ class Poll extends EventProvider implements ServiceManagerAwareInterface
     public function edit($data){
 
         $poll = $this->getPollMapper()->findById($data['poll']['id']);
+        $this->getServiceManager()->get('playgroundcms_revision_service')->createRevision($poll);
+
 
         $layoutContext = array();
 

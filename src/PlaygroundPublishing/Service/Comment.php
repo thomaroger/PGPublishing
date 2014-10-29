@@ -57,6 +57,8 @@ class Comment extends EventProvider implements ServiceManagerAwareInterface
     public function edit($data)
     {
         $comment = $this->getCommentMapper()->findById($data['comment']['id']);
+        $this->getServiceManager()->get('playgroundcms_revision_service')->createRevision($comment);
+
 
         $comment->setStatus($data['comment']['status']);
         $comment->setArticle($this->getServiceManager()->getArticleMapper()->findById($data['comment']['articleId']));

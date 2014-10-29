@@ -134,6 +134,8 @@ class Article extends EventProvider implements ServiceManagerAwareInterface
     public function edit($data){
 
         $article = $this->getArticleMapper()->findById($data['article']['id']);
+        $this->getServiceManager()->get('playgroundcms_revision_service')->createRevision($article);
+
 
         $layoutContext = array();
 

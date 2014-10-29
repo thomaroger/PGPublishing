@@ -94,6 +94,8 @@ class Category extends EventProvider implements ServiceManagerAwareInterface
     public function edit($data)
     {
         $category = $this->getCategoryMapper()->findById($data['category']['id']);
+        $this->getServiceManager()->get('playgroundcms_revision_service')->createRevision($category);
+
         
         $category->setStatus(CategoryEntity::CATEGORY_REFUSED);
 
