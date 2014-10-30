@@ -677,4 +677,14 @@ class Category implements InputFilterAwareInterface
         return $this;
     }
 
+    /**
+    * allowRevision : permet d'activer les revisions pour cette objet
+    *
+    * @return boolean true / false
+    */
+    public function allowRevision(){
+
+        return true;
+    }
+
 }

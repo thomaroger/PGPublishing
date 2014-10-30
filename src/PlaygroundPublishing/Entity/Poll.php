@@ -823,4 +823,13 @@ class Poll implements InputFilterAwareInterface
         return self::POLL_BLOCK_DETAIL_TYPE;
     }
 
+    /**
+    * allowRevision : permet d'activer les revisions pour cette objet
+    *
+    * @return boolean true / false
+    */
+    public function allowRevision(){
+
+        return true;
+    }
 }

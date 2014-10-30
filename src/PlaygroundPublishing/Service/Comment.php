@@ -51,26 +51,6 @@ class Comment extends EventProvider implements ServiceManagerAwareInterface
     }
 
     /**
-    * update : Permet de modifer un layout
-    * @param array $data : tableau de données 
-    */
-    public function edit($data)
-    {
-        $comment = $this->getCommentMapper()->findById($data['comment']['id']);
-        $this->getServiceManager()->get('playgroundcms_revision_service')->createRevision($comment);
-
-
-        $comment->setStatus($data['comment']['status']);
-        $comment->setArticle($this->getServiceManager()->getArticleMapper()->findById($data['comment']['articleId']));
-        $comment->setLocale($data['comment']['locale']);
-        $comment->setEmail($data['comment']['email']);
-        $comment->setName($data['comment']['name']);
-        $comment->setComment($data['comment']['comment']);
-
-        $comment = $this->getCommentMapper()->update($comment);
-    }
-
-    /**
     * checkLayout : Permet de verifier si le form est valid
     * @param array $data : tableau de données 
     *

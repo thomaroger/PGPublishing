@@ -906,4 +906,14 @@ class Article implements InputFilterAwareInterface
         return self::ARTICLE_BLOCK_DETAIL_TYPE;
     }
 
+    /**
+    * allowRevision : permet d'activer les revisions pour cette objet
+    *
+    * @return boolean true / false
+    */
+    public function allowRevision(){
+
+        return true;
+    }
+
 }
