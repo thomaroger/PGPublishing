@@ -155,7 +155,7 @@ class TagController extends AbstractActionController
         $translations = $this->getTagService()->getTagMapper()->getEntityRepositoryForEntity($tag->getTranslationRepository())->findTranslations($tag);
         $tag->setTranslations($translations);
 
-         if(!empty($revisionId)){
+        if(!empty($revisionId)){
             $revision = $this->getRevisionService()->getRevisionMapper()->findById($revisionId);
             $tag = unserialize($revision->getObject());
         }

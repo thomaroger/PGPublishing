@@ -308,13 +308,14 @@ return array(
                             'poll_edit' => array(
                                 'type' => 'Segment',
                                 'options' => array(
-                                    'route' => '/poll/edit/:id',
+                                    'route' => '/poll/edit/:id[/revision/:revisionId]',
                                     'defaults' => array(
                                         'controller' => 'PlaygroundPublishing\Controller\Back\Poll',
                                         'action'     => 'edit',
                                     ),
                                     'constraints' => array(
                                         'id' => '[0-9]+',
+                                        'revisionId' => '[0-9]+',
                                     ),
                                 ), 
                             ),

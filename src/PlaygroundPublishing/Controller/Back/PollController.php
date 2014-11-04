@@ -45,6 +45,10 @@ class PollController extends AbstractActionController
     * @var Locale $localeService  Service de locale
     */
     protected $localeService;
+    /**
+    * @var RevisionService revisionService  Service de Revision
+    */
+    protected $revisionService;
     
     /**
     * indexAction : Liste des articles
@@ -150,7 +154,12 @@ class PollController extends AbstractActionController
         $request = $this->getRequest();
 
         $pollId = $this->getEvent()->getRouteMatch()->getParam('id');
+        $revisionId = $this->getEvent()->getRouteMatch()->getParam('revisionId', 0);
+
         $poll = $this->getPollService()->getPollMapper()->findById($pollId);
+
+        $filters = array('type' => get_class($poll), 'objectId' => $poll->getId());
+        $revisions = $this->getRevisionService()->getRevisionMapper()->findByAndOrderBy($filters, array('id' => 'DESC'));
 
         if(empty($poll)){
 
@@ -159,6 +168,13 @@ class PollController extends AbstractActionController
 
         $translations = $this->getPollService()->getPollMapper()->getEntityRepositoryForEntity($poll->getTranslationRepository())->findTranslations($poll);
         $poll->setTranslations($translations);
+        $answers = $poll->getAnswers();
+        
+
+        if(!empty($revisionId)){
+            $revision = $this->getRevisionService()->getRevisionMapper()->findById($revisionId);
+            $poll = unserialize($revision->getObject());
+        }
 
         $ressources = $this->getRessourceService()->getRessourceMapper()->findBy(array('model' => 'PlaygroundPublishing\Entity\Poll', 'recordId' => $pollId));
         if ($request->isPost()) {
@@ -182,7 +198,6 @@ class PollController extends AbstractActionController
         $layouts = $this->getLayoutService()->getLayoutMapper()->findAll();
         $locales = $this->getLocaleService()->getLocaleMapper()->findBy(array('active_front' => 1));
 
-        $answers = $poll->getAnswers();
         foreach ($answers as $answer) {
             $translations = $this->getAnswerService()->getAnswerMapper()->getEntityRepositoryForEntity($answer->getTranslationRepository())->findTranslations($answer);
             $answer->setTranslations($translations);
@@ -195,6 +210,7 @@ class PollController extends AbstractActionController
                                    'poll'             => $poll,
                                    'answers'          => $answers,
                                    'ressources'       => $ressources,
+                                   'revisions'        => $revisions,
                                    'return'           => $return));
     }
 
@@ -296,5 +312,32 @@ class PollController extends AbstractActionController
         }
 
         return $this->ressourceService;
+    }
+
+    /**
+     * getRevisionService : Recuperation du service de revision
+     *
+     * @return RevisionService $revisionService : revisionService
+     */
+    private function getRevisionService()
+    {
+        if (null === $this->revisionService) {
+            $this->setRevisionService($this->getServiceLocator()->get('playgroundcms_revision_service'));
+        }
+
+        return $this->revisionService;
+    }
+
+    /**
+     * setRevisionService : Setter du service de revision
+     * @param  RevisionService $revisionService
+     *
+     * @return PollController $this
+     */
+    private function setRevisionService($revisionService)
+    {
+        $this->revisionService = $revisionService;
+
+        return $this;
     }
 }
