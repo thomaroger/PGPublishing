@@ -177,13 +177,14 @@ return array(
                             'category_edit' => array(
                                 'type' => 'Segment',
                                 'options' => array(
-                                    'route' => '/category/edit/:id',
+                                    'route' => '/category/edit/:id[/revision/:revisionId]',
                                     'defaults' => array(
                                         'controller' => 'PlaygroundPublishing\Controller\Back\Category',
                                         'action'     => 'edit',
                                     ),
                                     'constraints' => array(
                                         'id' => '[0-9]+',
+                                        'revisionId' => '[0-9]+',
                                     ),
                                 ), 
                             ),

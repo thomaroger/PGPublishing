@@ -35,6 +35,10 @@ class CategoryController extends AbstractActionController
 
     protected $ressourceService;
 
+    /**
+    * @var RevisionService revisionService  Service de Revision
+    */
+    protected $revisionService;
  
     /**
     * listAction : Liste des layouts
@@ -133,7 +137,12 @@ class CategoryController extends AbstractActionController
         $request = $this->getRequest();
 
         $categoryId = $this->getEvent()->getRouteMatch()->getParam('id');
+        $revisionId = $this->getEvent()->getRouteMatch()->getParam('revisionId', 0);
+
         $category = $this->getCategoryService()->getCategoryMapper()->findById($categoryId);
+
+        $filters = array('type' => get_class($category), 'objectId' => $category->getId());
+        $revisions = $this->getRevisionService()->getRevisionMapper()->findByAndOrderBy($filters, array('id' => 'DESC'));
 
         if(empty($category)){
 
@@ -142,6 +151,11 @@ class CategoryController extends AbstractActionController
 
         $translations = $this->getCategoryService()->getCategoryMapper()->getEntityRepositoryForEntity($category->getTranslationRepository())->findTranslations($category);
         $category->setTranslations($translations);
+
+        if(!empty($revisionId)){
+            $revision = $this->getRevisionService()->getRevisionMapper()->findById($revisionId);
+            $category = unserialize($revision->getObject());
+        }
 
         $ressources = $this->getRessourceService()->getRessourceMapper()->findBy(array('model' => 'PlaygroundPublishing\Entity\Category', 'recordId' => $category->getId()));
 
@@ -173,6 +187,7 @@ class CategoryController extends AbstractActionController
                                    'ressources' => $ressources,
                                    'categoryStatuses' => $categoryStatuses,
                                    'credentials' => $credentials,
+                                   'revisions'   => $revisions,
                                    'return' => $return));
     }
 
@@ -257,5 +272,32 @@ class CategoryController extends AbstractActionController
         }
 
         return $this->ressourceService;
+    }
+
+    /**
+     * getRevisionService : Recuperation du service de revision
+     *
+     * @return RevisionService $revisionService : revisionService
+     */
+    private function getRevisionService()
+    {
+        if (null === $this->revisionService) {
+            $this->setRevisionService($this->getServiceLocator()->get('playgroundcms_revision_service'));
+        }
+
+        return $this->revisionService;
+    }
+
+    /**
+     * setRevisionService : Setter du service de revision
+     * @param  RevisionService $revisionService
+     *
+     * @return CategoryController $this
+     */
+    private function setRevisionService($revisionService)
+    {
+        $this->revisionService = $revisionService;
+
+        return $this;
     }
 }
