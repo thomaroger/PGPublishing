@@ -332,6 +332,17 @@ return array(
                                     ),
                                 ), 
                             ),
+
+                            'search' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/search',
+                                    'defaults' => array(
+                                        'controller' => 'PlaygroundPublishing\Controller\Back\Search',
+                                        'action'     => 'search',
+                                    ),
+                                ), 
+                            ),
                         ),
                     ),
                 ),
@@ -356,6 +367,7 @@ return array(
             'PlaygroundPublishing\Controller\Back\Comment' => 'PlaygroundPublishing\Controller\Back\CommentController',
             'PlaygroundPublishing\Controller\Back\Poll' => 'PlaygroundPublishing\Controller\Back\PollController',
             'PlaygroundPublishing\Controller\Back\Tag'      => 'PlaygroundPublishing\Controller\Back\TagController',
+            'PlaygroundPublishing\Controller\Back\Search'      => 'PlaygroundPublishing\Controller\Back\SearchController',
         ),
     ),
 
