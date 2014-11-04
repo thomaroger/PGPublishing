@@ -129,13 +129,14 @@ return array(
                             'article_edit' => array(
                                 'type' => 'Segment',
                                 'options' => array(
-                                    'route' => '/article/edit/:id',
+                                    'route' => '/article/edit/:id[/revision/:revisionId]',
                                     'defaults' => array(
                                         'controller' => 'PlaygroundPublishing\Controller\Back\Article',
                                         'action'     => 'edit',
                                     ),
                                     'constraints' => array(
                                         'id' => '[0-9]+',
+                                        'revisionId' => '[0-9]+',
                                     ),
                                 ), 
                             ),

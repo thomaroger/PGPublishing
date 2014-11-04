@@ -57,6 +57,10 @@ class ArticleController extends AbstractActionController
     * @var ModuleOptions $cmsOptions  Options de playgroundcms
     */
     protected $cmsOptions;
+    /**
+    * @var RevisionService revisionService  Service de Revision
+    */
+    protected $revisionService;
 
     /**
     * indexAction : Liste des articles
@@ -167,7 +171,12 @@ class ArticleController extends AbstractActionController
         $request = $this->getRequest();
 
         $articleId = $this->getEvent()->getRouteMatch()->getParam('id');
+        $revisionId = $this->getEvent()->getRouteMatch()->getParam('revisionId', 0);
+
         $article = $this->getArticleService()->getArticleMapper()->findById($articleId);
+
+        $filters = array('type' => get_class($article), 'objectId' => $article->getId());
+        $revisions = $this->getRevisionService()->getRevisionMapper()->findByAndOrderBy($filters, array('id' => 'DESC'));
 
         if(empty($article)){
 
@@ -176,6 +185,11 @@ class ArticleController extends AbstractActionController
 
         $translations = $this->getArticleService()->getArticleMapper()->getEntityRepositoryForEntity($article->getTranslationRepository())->findTranslations($article);
         $article->setTranslations($translations);
+
+        if(!empty($revisionId)){
+            $revision = $this->getRevisionService()->getRevisionMapper()->findById($revisionId);
+            $article = unserialize($revision->getObject());
+        }
 
         $ressources = $this->getRessourceService()->getRessourceMapper()->findBy(array('model' => 'PlaygroundPublishing\Entity\Article', 'recordId' => $articleId));
         if ($request->isPost()) {
@@ -209,6 +223,7 @@ class ArticleController extends AbstractActionController
                                    'tags'             => $tags,
                                    'categories'       => $categories,
                                    'ressources'       => $ressources,
+                                   'revisions'        => $revisions,
                                    'return'           => $return));
     }
 
@@ -337,5 +352,32 @@ class ArticleController extends AbstractActionController
         }
 
         return $this->cmsOptions;
+    }
+
+    /**
+     * getRevisionService : Recuperation du service de revision
+     *
+     * @return RevisionService $revisionService : revisionService
+     */
+    private function getRevisionService()
+    {
+        if (null === $this->revisionService) {
+            $this->setRevisionService($this->getServiceLocator()->get('playgroundcms_revision_service'));
+        }
+
+        return $this->revisionService;
+    }
+
+    /**
+     * setRevisionService : Setter du service de revision
+     * @param  RevisionService $revisionService
+     *
+     * @return ArticleController $this
+     */
+    private function setRevisionService($revisionService)
+    {
+        $this->revisionService = $revisionService;
+
+        return $this;
     }
 }
