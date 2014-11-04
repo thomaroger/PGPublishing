@@ -34,6 +34,10 @@ class TagController extends AbstractActionController
     protected $layoutService;
 
     protected $ressourceService;
+    /**
+    * @var RevisionService revisionService  Service de Revision
+    */
+    protected $revisionService;
 
  
     /**
@@ -136,7 +140,12 @@ class TagController extends AbstractActionController
         $request = $this->getRequest();
 
         $tagId = $this->getEvent()->getRouteMatch()->getParam('id');
+        $revisionId = $this->getEvent()->getRouteMatch()->getParam('revisionId', 0);
+
         $tag = $this->getTagService()->getTagMapper()->findById($tagId);
+
+        $filters = array('type' => get_class($tag), 'objectId' => $tag->getId());
+        $revisions = $this->getRevisionService()->getRevisionMapper()->findByAndOrderBy($filters, array('id' => 'DESC'));
 
         if(empty($tag)){
 
@@ -145,6 +154,11 @@ class TagController extends AbstractActionController
 
         $translations = $this->getTagService()->getTagMapper()->getEntityRepositoryForEntity($tag->getTranslationRepository())->findTranslations($tag);
         $tag->setTranslations($translations);
+
+         if(!empty($revisionId)){
+            $revision = $this->getRevisionService()->getRevisionMapper()->findById($revisionId);
+            $tag = unserialize($revision->getObject());
+        }
 
         $ressources = $this->getRessourceService()->getRessourceMapper()->findBy(array('model' => 'PlaygroundPublishing\Entity\Tag', 'recordId' => $tag->getId()));
 
@@ -176,6 +190,7 @@ class TagController extends AbstractActionController
                                    'ressources' => $ressources,
                                    'credentials' => $credentials,
                                    'tagStatuses' => $tagStatuses,
+                                   'revisions' => $revisions,
                                    'return' => $return));
     }
 
@@ -261,5 +276,32 @@ class TagController extends AbstractActionController
         }
 
         return $this->ressourceService;
+    }
+
+    /**
+     * getRevisionService : Recuperation du service de revision
+     *
+     * @return RevisionService $revisionService : revisionService
+     */
+    private function getRevisionService()
+    {
+        if (null === $this->revisionService) {
+            $this->setRevisionService($this->getServiceLocator()->get('playgroundcms_revision_service'));
+        }
+
+        return $this->revisionService;
+    }
+
+    /**
+     * setRevisionService : Setter du service de revision
+     * @param  RevisionService $revisionService
+     *
+     * @return ArticleController $this
+     */
+    private function setRevisionService($revisionService)
+    {
+        $this->revisionService = $revisionService;
+
+        return $this;
     }
 }

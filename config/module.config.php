@@ -261,13 +261,14 @@ return array(
                             'tag_edit' => array(
                                 'type' => 'Segment',
                                 'options' => array(
-                                    'route' => '/tag/edit/:id',
+                                    'route' => '/tag/edit/:id[/revision/:revisionId]',
                                     'defaults' => array(
                                         'controller' => 'PlaygroundPublishing\Controller\Back\Tag',
                                         'action'     => 'edit',
                                     ),
                                     'constraints' => array(
                                         'id' => '[0-9]+',
+                                        'revisionId' => '[0-9]+',
                                     ),
                                 ), 
                             ),
