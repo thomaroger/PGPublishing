@@ -123,6 +123,9 @@ class Article extends EventProvider implements ServiceManagerAwareInterface
 
         $article = $this->getArticleMapper()->persist($article);
         $article = $this->getArticleMapper()->findById($article->getId());
+
+        $this->getServiceManager()->get('playgroundcms_feed_service')->createFeed($article, $article->getTitle(), 'New Article');
+
         
         $article->createRessource($this->getArticleMapper(), $locales);
     }
@@ -208,6 +211,9 @@ class Article extends EventProvider implements ServiceManagerAwareInterface
 
         $article = $this->getArticleMapper()->update($article);
         $article->editRessource($this->getArticleMapper(), $locales);
+
+        $this->getServiceManager()->get('playgroundcms_feed_service')->createFeed($article, $article->getTitle(), 'Edit Article');
+
     }
 
     /**

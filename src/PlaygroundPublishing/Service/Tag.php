@@ -83,6 +83,9 @@ class Tag extends EventProvider implements ServiceManagerAwareInterface
         $tag = $this->getTagMapper()->findById($tag->getId());
 
         $tag->createRessource($this->getTagMapper(), $locales);
+
+        $this->getServiceManager()->get('playgroundcms_feed_service')->createFeed($tag, $tag->getTitle(), 'New Tag');
+
     }
 
     /**
@@ -134,6 +137,9 @@ class Tag extends EventProvider implements ServiceManagerAwareInterface
 
         $tag = $this->getTagMapper()->update($tag);
         $tag->editRessource($this->getTagMapper(), $locales);
+
+        $this->getServiceManager()->get('playgroundcms_feed_service')->createFeed($tag, $tag->getTitle(), 'Edit Tag');
+
 
     }
 

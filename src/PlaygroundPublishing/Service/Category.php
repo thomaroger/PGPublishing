@@ -85,6 +85,9 @@ class Category extends EventProvider implements ServiceManagerAwareInterface
         $category = $this->getCategoryMapper()->findById($category->getId());
 
         $category->createRessource($this->getCategoryMapper(), $locales);
+
+        $this->getServiceManager()->get('playgroundcms_feed_service')->createFeed($category, $category->getTitle(), 'New Category');
+
     }
 
     /**
@@ -137,6 +140,9 @@ class Category extends EventProvider implements ServiceManagerAwareInterface
 
         $category = $this->getCategoryMapper()->update($category);
         $category->editRessource($this->getCategoryMapper(), $locales);
+
+        $this->getServiceManager()->get('playgroundcms_feed_service')->createFeed($category, $category->getTitle(), 'Edit Category');
+
     }
 
     /**

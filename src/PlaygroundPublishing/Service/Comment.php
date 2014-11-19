@@ -48,6 +48,9 @@ class Comment extends EventProvider implements ServiceManagerAwareInterface
         $comment->setComment($data['comment']['comment']);
 
         $comment = $this->getCommentMapper()->insert($comment);
+
+        $this->getServiceManager()->get('playgroundcms_feed_service')->createFeed($comment, $comment->getComment(), 'New Comment');
+
     }
 
     /**

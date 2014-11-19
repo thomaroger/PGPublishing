@@ -101,6 +101,9 @@ class Poll extends EventProvider implements ServiceManagerAwareInterface
         $poll = $this->getPollMapper()->findById($poll->getId());
         
         $poll->createRessource($this->getPollMapper(), $locales);
+
+        $this->getServiceManager()->get('playgroundcms_feed_service')->createFeed($poll, $poll->getTitle(), 'New Poll');
+
     }
 
     /**
@@ -164,6 +167,9 @@ class Poll extends EventProvider implements ServiceManagerAwareInterface
         $poll = $this->getPollMapper()->update($poll);
     
         $poll->editRessource($this->getPollMapper(), $locales);
+
+        $this->getServiceManager()->get('playgroundcms_feed_service')->createFeed($poll, $poll->getTitle(), 'Edit Poll');
+
     }
 
     /**
