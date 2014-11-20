@@ -1,0 +1,20 @@
+<?php $this->plugin('cmstranslate')->setTranslatorTextDomain('playgroundcms'); ?>
+<div class="col-md-12">
+    <h3> <?php echo $this->cmsTranslate('Tags'); ?> </h3>
+    <div class="list-group">
+        <?php if(count($this->results) > 0) : ?>
+            <?php foreach ($this->results as $result) : ?>
+                <?php $tag = $result; ?>
+                <?php $tag->setTranslatableLocale($this->ressource->getLocale()); ?>
+                <?php $this->em->refresh($tag); ?>
+                <a href="<?php echo $this->getUrl($tag)?>" class="list-group-item"><?php echo $tag->getTitle(); ?></a>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <div class="bs-callout bs-callout-danger">
+                <h4>
+                    <?php echo $this->cmsTranslate('No tag'); ?> 
+                </h4>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

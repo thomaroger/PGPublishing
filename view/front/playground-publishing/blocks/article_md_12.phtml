@@ -1,0 +1,29 @@
+<div class="col-md-12">
+    <?php $article = $this->article; ?>
+    <?php $article->setTranslatableLocale($this->ressource->getLocale()); ?>
+    <?php $this->em->refresh($article); ?>
+    <?php $categories = $article->getCategories(); ?>
+    <h6>
+        <?php foreach ($categories as $category) : ?>
+            <?php $category->setTranslatableLocale($this->ressource->getLocale()); ?>
+            <?php $this->em->refresh($category); ?>
+            <h3><a href="<?php echo $this->getUrl($category); ?>"><span class="label label-primary"><?php echo $category->getTitle(); ?></span></a></h3>
+        <?php endforeach; ?>
+    </h6>
+
+
+    <h2><?php echo $article->getTitle(); ?></h2>
+    <p><?php echo $article->getUpdatedAt()->format('d/m/Y H:i:s'); ?> by <?php echo $article->getAuthor(); ?></p>
+    <?php $tags = $article->getTags(); ?>
+    <p>
+        <?php foreach ($tags as $tag) : ?>
+            <?php $tag->setTranslatableLocale($this->ressource->getLocale()); ?>
+            <?php $this->em->refresh($tag); ?>
+            <a href="<?php echo $this->getUrl($tag); ?>"><span class="label label-default"><?php echo $tag->getTitle(); ?></span></a>
+        <?php endforeach; ?>
+    </p>
+    <?php echo $article->getContent(); ?>
+    <hr />
+</div>
+
+

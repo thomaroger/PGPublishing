@@ -1,0 +1,45 @@
+<?php $this->plugin('cmstranslate')->setTranslatorTextDomain('playgroundcms'); ?>
+
+<div class="col-md-12">
+    <div>
+        <?php if(count($this->results) > 0) : ?>
+            <?php foreach ($this->results as $result) : ?>
+                <div class="col-md-12">
+                    <?php $article = $result; ?>
+                    <?php $article->setTranslatableLocale($this->ressource->getLocale()); ?>
+                    <?php $this->em->refresh($article); ?>
+                    <?php $categories = $article->getCategories(); ?>
+                    <h6>
+                        <?php foreach ($categories as $category) : ?>
+                            <?php $category->setTranslatableLocale($this->ressource->getLocale()); ?>
+                            <?php $this->em->refresh($category); ?>
+                            <h3><a href="<?php echo $this->getUrl($category); ?>"><span class="label label-primary"><?php echo $category->getTitle(); ?></span></a></h3>
+                        <?php endforeach; ?>
+                    </h6>
+                    <h2><a href="<?php echo $this->getUrl($article); ?>"><?php echo $article->getTitle(); ?></a></h2>
+                    <p><?php echo $article->getUpdatedAt()->format('d/m/Y H:i:s'); ?> <?php echo $this->cmsTranslate('by'); ?> <?php echo $article->getAuthor(); ?></p>
+                    <?php $tags = $article->getTags(); ?>
+                    <p>
+                        <?php foreach ($tags as $tag) : ?>
+                            <?php $tag->setTranslatableLocale($this->ressource->getLocale()); ?>
+                            <?php $this->em->refresh($tag); ?>
+                            <a href="<?php echo $this->getUrl($tag); ?>"><span class="label label-default"><?php echo $tag->getTitle(); ?></span></a>
+                        <?php endforeach; ?>
+                    </p>
+                    <?php echo $article->getAbstract(); ?>
+                    <hr />
+                </div>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <div class="bs-callout bs-callout-danger">
+                <h4>
+                    <?php echo $this->cmsTranslate('No article'); ?> 
+                </h4>
+            </div>
+        <?php endif; ?>
+      
+        <?php if($this->block->getParam('pagination')) : ?>
+            <?php echo $this->paginationControl($this->results , 'Sliding', 'playground-cms/partial/pagination.phtml', array('uri' => $this->uri, "countResults" => $this->countResults)); ?>
+        <?php endif; ?>
+    </div>
+</div>

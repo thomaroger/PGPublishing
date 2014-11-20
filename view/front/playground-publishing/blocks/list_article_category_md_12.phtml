@@ -1,0 +1,49 @@
+<?php $this->plugin('cmstranslate')->setTranslatorTextDomain('playgroundcms'); ?>
+<div class="col-md-12">
+    <h2>
+        <?php foreach ($this->categories as $category) : ?>
+            <?php $category->setTranslatableLocale($this->ressource->getLocale()); ?>
+            <?php $this->em->refresh($category); ?>
+            <span class="label label-primary"><?php echo $category->getTitle(); ?></span>
+        <?php endforeach; ?>
+    </h2>
+    <br />
+    <div>
+        <?php if(count($this->articles) > 0) : ?>
+            <?php foreach ($this->articles as $article) : ?>
+                <?php $article->setTranslatableLocale($this->ressource->getLocale()); ?>
+                <?php $this->em->refresh($article); ?>
+                <h3><a href="<?php echo $this->getUrl($article); ?>"><?php echo $article->getTitle(); ?></a></h3>
+                 <?php $tags = $article->getTags(); ?>
+                <p>
+                    <?php foreach ($tags as $tag) : ?>
+                        <?php $tag->setTranslatableLocale($this->ressource->getLocale()); ?>
+                        <?php $this->em->refresh($tag); ?>
+                        <a href="<?php echo $this->getUrl($tag); ?>"><span class="badge"><?php echo $tag->getTitle(); ?></span></a>
+                    <?php endforeach; ?>
+                </p>
+
+                 <p><?php echo $article->getAbstract(); ?></p>
+                 <hr />
+            <?php endforeach; ?>
+        <?php else : ?>
+            <div class="bs-callout bs-callout-danger">
+                <h4>
+                    <?php echo $this->cmsTranslate('No article for'); ?> 
+                    <?php $categoryName = ''; ?>
+                    <?php foreach ($this->categories as $category) : ?>
+                        <?php $category->setTranslatableLocale($this->ressource->getLocale()); ?>
+                        <?php $this->em->refresh($category); ?>
+                        <?php $categoryName .= $category->getTitle().', '; ?>
+                    <?php endforeach; ?>
+                    <?php echo trim($categoryName, ', '); ?>
+                </h4>
+            </div>
+        <?php endif; ?>
+    </div>
+    <div>
+        <?php if($this->block->getParam('pagination')) : ?>
+            <?php echo $this->paginationControl($this->articles , 'Sliding', 'playground-cms/partial/pagination.phtml', array('uri' => $this->uri, "countResults" => $this->countArticles)); ?>
+        <?php endif; ?>
+    </div>
+</div>

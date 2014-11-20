@@ -1,0 +1,33 @@
+<?php $articles = array(); ?>
+<?php $article->setTranslatableLocale($this->ressource->getLocale()); ?>
+<?php $this->em->refresh($article); ?>
+<?php $articles = array(); ?>
+<?php $articles['id'] = $article->getId(); ?>
+<?php $articles['title'] = $article->getTitle(); ?>
+<?php $articles['abstract'] = $article->getAbstract(); ?>
+<?php $articles['content'] = $article->getContent(); ?>
+<?php $articles['url'] = $this->serverUrl().$this->getUrl($article); ?>
+<?php $articles['author'] = $article->getAuthor(); ?>
+<?php $articles['updated_at'] = $article->getUpdatedAt()->getTimestamp(); ?>
+
+<?php $articles['categories'] = array() ?>
+<?php $categories = $article->getCategories(); ?>
+<?php foreach ($categories as $category) : ?>
+    <?php $category->setTranslatableLocale($this->ressource->getLocale()); ?>
+    <?php $this->em->refresh($category); ?>
+    <?php $articles['categories'][$category->getId()]['id'] = $category->getId(); ?>
+    <?php $articles['categories'][$category->getId()]['title'] = $category->getTitle(); ?>
+    <?php $articles['categories'][$category->getId()]['url'] = $this->serverUrl().$this->getUrl($category); ?>
+<?php endforeach; ?>
+
+<?php $articles['tags'] = array() ?>
+<?php $tags = $article->getTags(); ?>
+<?php foreach ($tags as $tag) : ?>
+    <?php $tag->setTranslatableLocale($this->ressource->getLocale()); ?>
+    <?php $this->em->refresh($tag); ?>
+    <?php $articles['tags'][$tag->getId()]['id'] = $tag->getId(); ?>
+    <?php $articles['tags'][$tag->getId()]['title'] = $tag->getTitle(); ?>
+    <?php $articles['tags'][$tag->getId()]['url'] = $this->serverUrl().$this->getUrl($tag); ?>
+<?php endforeach; ?>
+
+<?php echo json_encode($articles); ?>

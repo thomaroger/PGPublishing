@@ -1,0 +1,37 @@
+<?php $articles = array(); ?>
+<?php if(count($this->results) > 0) : ?>
+    <?php foreach ($this->results as $result) : ?>
+        <?php $article = $result; ?>
+        <?php $article->setTranslatableLocale($this->ressource->getLocale()); ?>
+        <?php $this->em->refresh($article); ?>
+        <?php $articles[$article->getId()] = array(); ?>
+        <?php $articles[$article->getId()]['id'] = $article->getId(); ?>
+        <?php $articles[$article->getId()]['title'] = $article->getTitle(); ?>
+        <?php $articles[$article->getId()]['abstract'] = $article->getAbstract(); ?>
+        <?php $articles[$article->getId()]['url'] = $this->serverUrl().$this->getUrl($article); ?>
+        <?php $articles[$article->getId()]['author'] = $article->getAuthor(); ?>
+        <?php $articles[$article->getId()]['updated_at'] = $article->getUpdatedAt()->getTimestamp(); ?>
+        
+        <?php $articles[$article->getId()]['categories'] = array() ?>
+        <?php $categories = $article->getCategories(); ?>
+        <?php foreach ($categories as $category) : ?>
+            <?php $category->setTranslatableLocale($this->ressource->getLocale()); ?>
+            <?php $this->em->refresh($category); ?>
+            <?php $articles[$article->getId()]['categories'][$category->getId()]['id'] = $category->getId(); ?>
+            <?php $articles[$article->getId()]['categories'][$category->getId()]['title'] = $category->getTitle(); ?>
+            <?php $articles[$article->getId()]['categories'][$category->getId()]['url'] = $this->serverUrl().$this->getUrl($category); ?>
+        <?php endforeach; ?>
+
+        <?php $articles[$article->getId()]['tags'] = array() ?>
+        <?php $tags = $article->getTags(); ?>
+        <?php foreach ($tags as $tag) : ?>
+            <?php $tag->setTranslatableLocale($this->ressource->getLocale()); ?>
+            <?php $this->em->refresh($tag); ?>
+            <?php $articles[$article->getId()]['tags'][$tag->getId()]['id'] = $tag->getId(); ?>
+            <?php $articles[$article->getId()]['tags'][$tag->getId()]['title'] = $tag->getTitle(); ?>
+            <?php $articles[$article->getId()]['tags'][$tag->getId()]['url'] = $this->serverUrl().$this->getUrl($tag); ?>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+<?php echo json_encode($articles); ?>

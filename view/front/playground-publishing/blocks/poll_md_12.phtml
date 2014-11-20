@@ -1,0 +1,82 @@
+<?php $this->plugin('cmstranslate')->setTranslatorTextDomain('playgroundcms'); ?>
+
+<?php if(!$this->result) : ?>
+    <div class="col-md-12">
+        <form method="POST">
+            <?php $poll = $this->poll; ?>
+            <?php $poll->setTranslatableLocale($this->ressource->getLocale()); ?>
+            <?php $this->em->refresh($poll); ?>
+            <h2><?php echo $poll->getQuestion(); ?></h2>
+            <hr />
+            <div class="well well-sm">
+                <p><?php echo $poll->getUpdatedAt()->format('d/m/Y H:i:s'); ?> <?php echo $this->cmsTranslate('by'); ?> <?php echo $poll->getAuthor(); ?></p>
+            </div>
+            <?php foreach ($answers as $answer) : ?>
+                <?php $answer->setTranslatableLocale($this->ressource->getLocale());?>
+                <?php $this->em->refresh($answer); ?>
+                <div class="list-group">
+                    <a href="#" class="list-group-item">
+                        <label class="poll-label" for="answer_<?php echo $answer->getId(); ?>">
+                            <h4 class="list-group-item-heading">
+                                <input type="radio" id="answer_<?php echo $answer->getId(); ?>" name="poll" value="<?php echo $answer->getId(); ?>" />
+                                <span><?php echo $answer->getAnswer(); ?></span>
+                            </h4>
+                        </label>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+            <p class="pull-left"> <?php echo $this->cmsTranslate('Nombre de votes'); ?> : <?php echo $this->nbVote; ?> <?php echo $this->cmsTranslate('votes'); ?> </p>
+            <div class="form-group">
+                <div class="col-md-12">
+                  <button type="submit" class="btn btn-success pull-right"><?php echo $this->cmsTranslate('Vote'); ?> </button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+<?php else : ?>
+   <div class="col-md-12">
+        <?php $poll = $this->poll; ?>
+        <?php $poll->setTranslatableLocale($this->ressource->getLocale()); ?>
+        <?php $this->em->refresh($poll); ?>
+        <h2><?php echo $poll->getQuestion(); ?></h2>
+        <hr />
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <span class="pull-right">
+                    <?php echo $this->cmsTranslate('until'); ?> <?php echo $poll->getEndDate()->format('d/m/Y'); ?>
+                </span>
+                <div class="clearfix">&nbsp;</div>
+            </div>
+        </div>
+        <div class="progress">
+            <?php foreach ($answers as $answer) : ?>
+                <?php $className = "progress-bar-danger"; ?>
+                <?php if($answer->getCount() == $this->maxVote) : ?>
+                    <?php $className = "progress-bar-success"; ?>
+                <?php endif; ?>
+                <?php $answer->setTranslatableLocale($this->ressource->getLocale());?>
+                <?php $this->em->refresh($answer); ?>
+                    <div class="progress-bar <?php echo $className; ?>" role="progressbar" aria-valuenow="<?php echo round(($answer->getCount()/$nbVote)*100); ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo round(($answer->getCount()/$nbVote)*100); ?>%;">
+                        <?php echo $answer->getAnswer(); ?> : <?php echo round(($answer->getCount()/$this->nbVote)*100); ?>%
+                    </div>
+            <?php endforeach; ?>
+        </div>
+        <ul class="list-group">
+            <?php foreach ($answers as $answer) : ?>
+                <?php $answer->setTranslatableLocale($this->ressource->getLocale());?>
+                <?php $this->em->refresh($answer); ?>
+                <?php $className = "list-group-item-danger"; ?>
+                <?php if($answer->getCount() == $this->maxVote) : ?>
+                    <?php $className = "list-group-item-success"; ?>
+                <?php endif; ?>
+                    <li class="list-group-item <?php echo $className; ?>">
+                        <h4 class="list-group-item-heading">
+                            <?php echo $answer->getAnswer(); ?> : <?php echo round(($answer->getCount()/$this->nbVote)*100); ?>% (<?php echo $answer->getCount(); ?> <?php echo $this->cmsTranslate('votes'); ?>)
+                        </h4>
+                    </li>
+            <?php endforeach; ?>        
+        </ul>
+        <p class="pull-right"> <?php echo $this->cmsTranslate('Nombre de votes'); ?> : <?php echo $this->nbVote; ?> <?php echo $this->cmsTranslate('votes'); ?> </p>
+    </div> 
+<?php endif; ?>

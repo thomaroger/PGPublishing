@@ -1,0 +1,203 @@
+<div class="row">
+    <div class="col-md-12">
+        <section class="widget">
+            <ol class="breadcrumb">
+                <li><a href="<?php echo $this->url('admin'); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                <li class="active">Comments</li>
+            </ol>
+        </section>
+    </div>
+</div>
+
+<section class="widget">
+    <header>
+        <h4><i class="fa fa-search"></i> Filters</h4>
+    </header>
+    <div class="clearfix"></div>
+    <div class="body">
+        <div class="col-md-6">
+            <div class="control-group">
+                <label for="description" class="control-label">Comment</label>
+                <div class="controls form-group">
+                    <input type="text" id="first-name" name="filters[comment]" class="form-control" value="">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="control-group">
+                <label for="description" class="control-label">State</label>
+                <div class="controls form-group">
+                    <select class="selectpicker show-tick" name="page[status]" data-live-search="true" data-size="6" data-width="100%">
+                        <option value="-1" data-content="" selected>Choose the status</option>
+                        <?php foreach ($commentStatuses as $key => $value) : ?>
+                        <?php $labelType = "warning" ?>
+                        <?php if($key == 1 ) $labelType = "success"; ?>
+                        <?php if($key == 2 ) $labelType = "important"; ?>
+                            <option value="<?php echo $key; ?>" data-content="<span class='label label-<?php echo $labelType; ?>'><?php echo $value; ?></span>" <?php echo @$this->data['page']["status"]===$key?'selected':'';?>><?php echo $value; ?></option>
+                        <?php endforeach; ?>
+                  </select>
+                </div>
+            </div>
+        </div>
+    </diV>
+    <div class="clearfix"></div>
+</section>
+
+<section class="widget">
+    <header>
+        <h4>
+            <i class="fa fa-comments"></i>
+            Comments list (<?php echo $this->nbComments;?>)
+        </h4>
+    </header>
+    <div class="clearfix"></div>
+    <div class="divider"></div>
+    <div class="body">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Article</th>
+                    <th>Locale</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Comment</th>
+                    <th>State</th>
+                    <th>Created date</th>
+                    <th class="td-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($this->commentsPaginator as $comment) : ?>
+                    <?php $color = "orange"; ?>
+                    <?php $code = "times"; ?>
+                    <?php if($comment->getStatus() == 1 ) : ?>
+                        <?php $color = "green"; ?>
+                        <?php $code = "check"; ?>
+                    <?php elseif ($comment->getStatus() == 2) :  ?>
+                        <?php $color = "red"; ?>
+                    <?php endif; ?>
+                    <tr>
+                        <td><?php echo $comment->getArticle()->getTitle(); ?></td>
+                        <td><?php echo $comment->getLocale(); ?></td>
+                        <td><?php echo $comment->getName(); ?></td>
+                        <td><?php echo $comment->getEmail(); ?></td>
+                        <td><?php echo $comment->getComment(); ?></td>
+                        <td>
+                            <div class="feed-item">
+                                <div class="icon">
+                                    <i class="fa fa-<?php echo $code; ?> color-<?php echo $color; ?>"></i>
+                                </div>
+                            </div>
+                        </td>
+                        <td><?php echo $comment->getCreatedAt()->format('d/m/Y H:i:s'); ?></td>
+                        <td class="td-actions">
+                            <?php if($comment->getStatus() != 1 ) : ?>
+                            <a href="javascript:;" data-toggle="modal" data-target="#myModal_accept_<?php echo $comment->getId(); ?>" class="btn btn-xs btn-success">
+                                <i class="btn-icon-only fa fa-check"></i>                                       
+                            </a>
+                            <?php endif; ?>
+
+                            <?php if($comment->getStatus() != 2 ) : ?>
+                                <a href="javascript:;" data-toggle="modal" data-target="#myModal_refuse_<?php echo $comment->getId(); ?>"class="btn btn-xs btn-danger">
+                                    <i class="btn-icon-only fa fa-times"></i>                                       
+                                </a>
+                            <?php endif; ?>
+
+                            <a href="javascript:;" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModal_<?php echo $comment->getId(); ?>">
+                                <i class="btn-icon-only fa fa-trash-o"></i>                                       
+                            </a>
+                        </td>
+
+                        <div id="myModal_accept_<?php echo $comment->getId(); ?>" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title" id="myModalLabel">Confirm the acceptance of the comment ?</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4><?php echo $comment->getName().' - '.$comment->getEmail();  ?></h4>
+                                        <h5>Comment :</h5>
+                                        <p>
+                                            <?php echo $comment->getComment(); ?>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <a href="<?php echo $this->url('admin/playgroundpublishingadmin/comment_moderate', array('id' => $comment->getId(), 'state' => 1));?>">
+                                            <button type="button" class="btn btn-success">Accept</button>
+                                        </a>
+                                    </div>
+
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div>
+
+                        <div id="myModal_refuse_<?php echo $comment->getId(); ?>" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title" id="myModalLabel">Confirm the refusal of the comment ?</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4><?php echo $comment->getName().' - '.$comment->getEmail();  ?></h4>
+                                        <h5>Comment :</h5>
+                                        <p>
+                                            <?php echo $comment->getComment(); ?>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <a href="<?php echo $this->url('admin/playgroundpublishingadmin/comment_moderate', array('id' => $comment->getId(), 'state' => 2));?>">
+                                            <button type="button" class="btn btn-danger">Refuse</button>
+                                        </a>
+                                    </div>
+
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div>
+
+
+                        <div id="myModal_<?php echo $comment->getId(); ?>" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title" id="myModalLabel">Confirm the deletion of the comment ?</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4><?php echo $comment->getName().' - '.$comment->getEmail();  ?></h4>
+                                        <h5>Comment :</h5>
+                                        <p>
+                                            <?php echo $comment->getComment(); ?>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <a href="<?php echo $this->url('admin/playgroundpublishingadmin/comment_remove', array('id' => $comment->getId()));?>">
+                                            <button type="button" class="btn btn-danger">Remove</button>
+                                        </a>
+                                    </div>
+
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div> 
+    <?php $paginator =  $this->paginationControl($this->commentsPaginator , 'Sliding', 'playground-cms/partial/pagination.phtml', array('uri' => $this->url('admin/playgroundpublishingadmin/comments'), "countResults" => $this->nbComments)); ?> 
+    <?php if(strlen($paginator) > 10) :?>
+            <div class="divider"></div>
+            <?php echo $paginator; ?>
+    <?php endif; ?>
+    <div class="clearfix"></div>
+</section>
+
+
+

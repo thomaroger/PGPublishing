@@ -1,0 +1,24 @@
+<?php $this->plugin('cmstranslate')->setTranslatorTextDomain('playgroundcms'); ?>
+<div class="col-md-12">
+    <h3> <?php echo $this->cmsTranslate('Polls'); ?> </h3>
+    <div class="list-group">
+        <?php if(count($this->results) > 0) : ?>
+            <?php foreach ($this->results as $result) : ?>
+                <?php $poll = $result; ?>
+                <?php $poll->setTranslatableLocale($this->ressource->getLocale()); ?>
+                <?php $this->em->refresh($poll); ?>
+                <?php $className = "list-group-item-success"; ?>
+                <?php if($poll->isFinished()): ?>
+                    <?php $className = "list-group-item-danger"; ?>
+                <?php endif; ?>
+                <a href="<?php echo $this->getUrl($poll)?>" class="list-group-item <?php echo $className; ?>"><?php echo $poll->getTitle(); ?></a>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <div class="bs-callout bs-callout-danger">
+                <h4>
+                    <?php echo $this->cmsTranslate('No poll'); ?> 
+                </h4>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

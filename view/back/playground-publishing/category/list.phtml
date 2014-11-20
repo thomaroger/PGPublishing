@@ -1,0 +1,174 @@
+<div class="row">
+    <div class="col-md-12">
+        <section class="widget">
+            <ol class="breadcrumb">
+                <li><a href="<?php echo $this->url('admin'); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                <li class="active">Categories</li>
+            </ol>
+        </section>
+    </div>
+</div>
+<section class="widget">
+    <header>
+        <h4><i class="fa fa-search"></i> Filters</h4>
+    </header>
+    <div class="clearfix"></div>
+    <div class="body">
+        <div class="col-md-6">
+            <div class="control-group">
+                <label for="description" class="control-label">Title</label>
+                <div class="controls form-group">
+                    <input type="text" id="first-name" name="filters[title]" class="form-control" value="">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="control-group">
+                <label for="description" class="control-label">Active ?</label>
+                <div class="controls form-group">
+                    <select class="selectpicker show-tick" name="filters[active]" data-live-search="true" data-size="6" data-width="100%">
+                        <option value="2" data-content="<span class='label label-default'>Yes / No</span>">Yes / No</option>
+                        <option value="1" data-content="<span class='label label-success'>Yes</span>">Yes</option>
+                        <option value="0" data-content="<span class='label label-danger'>No</span>">No</option>
+                  </select>
+                </div>
+            </div>
+        </div>
+    </diV>
+    <div class="clearfix"></div>
+</section>
+
+<section class="widget">
+    <header>
+        <h4>
+            <i class="fa fa-book"></i>
+            Categories list (<?php echo $this->nbCategory;?>)
+        </h4>
+    </header>
+    <div class="pull-right margin-right30">
+        <a href="<?php echo $this->url("admin/playgroundpublishingadmin/category_create");?>">
+            <button type="button" class="btn btn-success btn-lg" data-placement="top" data-original-title=".btn .btn-success .btn-lg">
+                Add a Category
+            </button>
+        </a>
+    </div>
+    <div class="clearfix"></div>
+    <div class="divider"></div>
+    <div class="body">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Slug</th>
+                    <th>Status</th>
+                    <th>Created date</th>
+                    <th>Urls</th>
+                    <th>Layouts</th>
+                    <th>Articles</th>
+                    <th class="td-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($this->categoriesPaginator as $category) : ?>
+                    <tr>
+                        <td>
+                            <?php echo $category->getTitle(); ?>
+                        </td>
+                        <td>
+                            <?php echo $category->getSlug(); ?>
+                        </td>
+                        <td>
+                            <?php 
+                            if($category->getStatus()) : 
+                            ?>
+                                <div class="feed-item">
+                                    <div class="icon">
+                                        <i class="fa fa-check color-green"></i>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <div class="feed-item">
+                                    <div class="icon">
+                                        <i class="fa fa-times color-red"></i>
+                                    </div>
+                                </div>
+                            <?php endif;  ?>
+                        </td>
+                        <td><?php echo $category->getCreatedAt()->format('d/m/Y H:i:s'); ?></td>
+                        <td>
+                            <ul>
+                            <?php $ressources = $this->ressourcesCollection[$category->getId()]; ?>
+                            <?php foreach ($ressources as $key => $ressource) : ?>
+                                <li><a class="color-white" href="<?php echo $ressource->getUrl();?>" target="_blank">
+                                    <?php echo $ressource->getUrl();?> 
+                                </a> </li>
+                            <?php endforeach; ?>
+                            </ul>
+                        </td>
+                        <td>
+                            <?php $layouts = json_decode($ressources['fr_FR']->getLayoutContext(), true); ?>
+                            <?php foreach ($layouts as $key => $value) : ?>
+                                <?php echo $key." : ".$value."<br />"; ?>
+                            <?php endforeach; ?>
+                        </td>
+                        <td>
+                            <?php echo $category->getArticles()->count(); ?> articles associated</td>
+                        </td>
+                        <td class="td-actions">
+                            <a href="<?php echo $this->url('admin/playgroundpublishingadmin/category_edit', array('id' => $category->getId()));?>" class="btn btn-xs btn-success">
+                                <i class="btn-icon-only fa fa-pencil"></i>                                       
+                            </a>
+                            <a href="javascript:;" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModal_<?php echo $category->getId(); ?>">
+                                <i class="btn-icon-only fa fa-times"></i>                                       
+                            </a>
+                        </td>
+                        <div id="myModal_<?php echo $category->getId(); ?>" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title" id="myModalLabel">Confirm the deletion of the category ?</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4><?php echo $category->getTitle(); ?></h4>
+                                        <h5>Slug : <?php echo $category->getSlug(); ?></h5>
+                                        <h5>Description :</h5>
+                                        <p>
+                                            <?php echo $category->getDescription(); ?>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <a href="<?php echo $this->url('admin/playgroundpublishingadmin/category_remove', array('id' => $category->getId()));?>">
+                                            <button type="button" class="btn btn-danger">Remove</button>
+                                        </a>
+                                    </div>
+
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div> 
+    <?php $paginator =  $this->paginationControl($this->categoriesPaginator , 'Sliding', 'playground-cms/partial/pagination.phtml', array('uri' => $this->url('admin/playgroundpublishingadmin/categories'), "countResults" => $this->nbCategory)); ?> 
+    <?php if(strlen($paginator) > 10) :?>
+            <div class="divider"></div>
+            <?php echo $paginator; ?>
+    <?php endif; ?>
+    <div class="clearfix"></div>
+    <div class="divider"></div>
+    <div class="pull-right margin-right30">
+        <a href="<?php echo $this->url("admin/playgroundpublishingadmin/category_create");?>">
+            <button type="button" class="btn btn-success btn-lg" data-placement="top" data-original-title=".btn .btn-success .btn-lg">
+                Add a Category
+            </button>
+        </a>
+    </div>
+    <div class="clearfix"></div>
+</section>
+
+
+
