@@ -382,6 +382,7 @@ return array(
             ),
         ),
     ),
+    
     'blocksType' => array(
         'publishing' => __DIR__.'/../src/PlaygroundPublishing/Blocks', 
     ),
