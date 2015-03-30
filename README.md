@@ -21,7 +21,6 @@ La documentation sur PlaygroundCMS se trouve [ici](https://github.com/thomaroger
     "zendframework/zend-stdlib" : "~2.1",
     "doctrine/doctrine-orm-module" : "*",
     "widmogrod/zf2-assetic-module": "1.3.3",
-    "hounddog/doctrine-data-fixture-module": "0.*",
     "zendframework/zend-developer-tools" : "dev-master",
     "jhuet/zdt-logger-module" : "0.*",
     "zf-commons/zfc-base" : "0.*",
